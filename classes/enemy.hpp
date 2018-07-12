@@ -12,11 +12,12 @@ class Enemy: public Character{
 public:
   Enemy();
   Enemy(std::string n);
+  Enemy(std::string n, int s[4]);
   Enemy(std::string n, int h, int mh, int s[4], int e, Item W, Item a, Item l, float lr, std::string d);
   ~Enemy();
-  Item drop_loot();
+  Item get_loot();
   int drop_exp();
   std::string get_description();
-  float get_loot_rate();
+  bool drop_loot();
   void print_stats();
 };

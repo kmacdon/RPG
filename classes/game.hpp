@@ -19,5 +19,4 @@ public:
   void save();
   void load(bool reload);
   void quit();
-  Enemy generate_enemy();
 };

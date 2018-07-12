@@ -51,8 +51,6 @@ int Character::get_speed(){
 void Character::print_stats(){
   std::cout << "Name: " << name << "\tHealth: " << health << "/" << max_health << std::endl;
   std::cout << "Weapon: " << weapon.get_name() << "\tArmor: " << armor.get_name() << std::endl;
-  std::cout << "Str\tEnd\tSpd\tLck\n";
-  std::cout << skills[0] << "\t" << skills[1] << "\t" << skills[2] << "\t" << skills[3] << std::endl;
 }
 
 bool Character::is_alive(){

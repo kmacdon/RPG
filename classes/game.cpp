@@ -10,8 +10,6 @@ Game::~Game(){
 }
 
 void Game::initialize(){
-  std::cout << "Enter name: ";
-  std::cin >>
 }
 
 //use srand(time(0))

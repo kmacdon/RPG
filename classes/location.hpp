@@ -1,5 +1,6 @@
 #include <string>
 #include <vector>
+#include "enemy.hpp"
 
 #pragma once
 
@@ -18,8 +19,10 @@ public:
   ~Location();
   void add_connections(std::vector<Location *> c);
   bool random_encounter();
+  Enemy generate_enemy();
   std::string get_name();
   void print_connections();
   Location* get_connection(std::string s);
+  std::vector<std::string> list_connections(); 
   std::string get_description();
 };
