@@ -1,7 +1,6 @@
 #include "character.hpp"
 #include "location.hpp"
 #include "enemy.hpp"
-#include <vector>
 
 #pragma once
 
@@ -17,7 +16,7 @@ class Player: public Character{
   Item get_item(std::string);
 public:
   Player();
-  Player(std::string n, int h, int mh, int s[4], Item w, Item a);
+  Player(std::string n, int h, int mh, int s[4], Item w, Item a, int next_level);
   ~Player();
   void move();
   Location* get_location();

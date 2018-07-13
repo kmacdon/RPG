@@ -1,5 +1,4 @@
 #include "item.hpp"
-#include <string>
 
 #pragma once
 
@@ -21,6 +20,7 @@ public:
   ~Character();
 
   //methods
+  std::string get_name();
   int attack();
   void defend(int a);
   void print_stats();

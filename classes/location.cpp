@@ -28,10 +28,18 @@ bool Location::random_encounter(){
   return (float)rand()/(float)(RAND_MAX) < encounter_rate;
 }
 
+int Location::num_connections(){
+  return connections.size();
+}
+
 void Location::print_connections(){
   for(int i = 0; i < connections.size(); i++){
     std::cout << connections[i]->get_name() << std::endl;
   }
+}
+
+void Location::set_connection(Location* L){
+    connections.push_back(L);
 }
 
 Location* Location::get_connection(std::string s){

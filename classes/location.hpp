@@ -2,6 +2,8 @@
 #include <vector>
 #include "enemy.hpp"
 
+
+
 #pragma once
 
 class Location{
@@ -22,7 +24,9 @@ public:
   Enemy generate_enemy();
   std::string get_name();
   void print_connections();
+  void set_connection(Location* L);
+  int num_connections();
   Location* get_connection(std::string s);
-  std::vector<std::string> list_connections(); 
+  std::vector<std::string> list_connections();
   std::string get_description();
 };

@@ -1,24 +1,17 @@
 #include "player.hpp"
 #include "../functions.hpp"
-#include <iostream>
 
 Player::Player(){
-
+  name = "NULL";
 }
 
-Player::Player(std::string n, int h, int mh, int s[4], Item w, Item a){
+Player::Player(std::string n, int h, int mh, int s[4], Item w, Item a, int next_level){
     name = n;
     health = h;
     max_health = mh;
     assign(skills, s, 4);
     weapon = w;
     armor = a;
-    inventory.resize(2);
-    inventory[0] = weapon;
-    inventory[1] = armor;
-    quantity.resize(2);
-    quantity[0] = 1;
-    quantity[1] = 1;
     alive = true;
     level = 1;
     experience = 0;

@@ -1,7 +1,6 @@
 #include "character.hpp"
 #include "../functions.hpp"
 #include <cmath>
-#include <iostream>
 
 Character::Character(){
   name = "C";
@@ -31,6 +30,10 @@ Character::~Character(){}
 int Character::attack(){
   std::cout << name << " attacks with " << weapon.get_name() << " and deals ";
   return round((.8*skills[0] + weapon.get_stat()));
+}
+
+std::string Character::get_name(){
+    return name;
 }
 
 void Character::defend(int a){

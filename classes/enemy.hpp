@@ -19,5 +19,4 @@ public:
   int drop_exp();
   std::string get_description();
   bool drop_loot();
-  void print_stats();
 };

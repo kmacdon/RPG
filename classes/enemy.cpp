@@ -96,12 +96,6 @@ Item Enemy::get_loot(){
   return loot;
 }
 
-void Enemy::print_stats(){
-  Character::print_stats();
-  std::cout << "Experience: " << experience << "\tLoot: " << loot << std::endl;
-  std::cout << description << std::endl;
-}
-
 std::string Enemy::get_description(){
   return description;
 }
