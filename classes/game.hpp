@@ -6,7 +6,7 @@
 
 class Game{
 private:
-  bool play;
+  bool play_game;
   Player P;
   std::vector<Location> map;
   //std::vector<Dungeon> dungeons;
@@ -18,8 +18,9 @@ public:
   Game();
   ~Game();
   void initialize(bool reload);
-  //void play();
-  //void save();
+  //void welcome_screen();
+  void play();
+  void save();
   void load_data(std::string s);
   int status(bool print = false);
   //void quit();

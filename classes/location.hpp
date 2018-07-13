@@ -29,4 +29,5 @@ public:
   Location* get_connection(std::string s);
   std::vector<std::string> list_connections();
   std::string get_description();
+  friend std::string compress(Location L);
 };

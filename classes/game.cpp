@@ -2,9 +2,10 @@
 #include <fstream>
 #include <algorithm>
 #include "../functions.hpp"
+#include "../error.hpp"
 
 Game::Game(){
-  play = true;
+  play_game = true;
   P = Player();
 }
 
@@ -19,7 +20,7 @@ void Game::initialize(bool reload){
   //Load data
   std::string filename;
   if(reload){
-    filename = "../save.txt";
+    filename = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/save.txt";
   }
   else{
     filename = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/default.txt";
@@ -128,9 +129,62 @@ void Game::create_map(){
   }
 }
 
+void Game::play(){
+  while(P.is_alive()){
+    std::cout << "What would you like to do?" << std::endl;
+    std::cout << "Inventory\tMove\tSave\tQuit" << std::endl;
+    std::string s;
+    std::getline(std::cin, s);
+    if(s == "Inventory"){
+      P.print_inventory();
+      std::getline(std::cin, s);
+      std::vector<std::string> v = split(s, ' ');
+      if(v[0] == "compare"){
+        std::cout << P.get_item(v[1]) << P.get_item(v[2]) << std::endl;
+      }
+      else if(v[0] == "equip"){
+        P.use_item(P.get_item(v[1]));
+      }
+      else if(v[0] == "quit"){
+
+      }
+      else {
+        std::cout << "Sorry, that command is not recognized" << std::endl;
+      }
+    }
+    else if(s == "Move"){
+      P.move();
+    }
+    else if(s == "Save"){
+      save();
+    }
+    else if(s == "Quit"){
+      play_game = false;
+    }
+    else{
+      std::cout << "Sorry, that command is not recognized" << std::endl;
+    }
+  }
+
+}
+
+void Game::save(){
+    std::string filename = "save.txt";
+    std::cout << "Overwriting " << filename << std::endl;
+    std::ofstream output(filename);
+    if(!output)
+      std::cout << "Error: File failed to open" << std::endl;
+    for(int i = 0; i < map.size(); i++){
+      output << compress(map[i]) << std::endl;
+    }
+    output << compress(P) << std::endl;
+    output.close();
+}
+
 //load data from file
 void Game::load_data(std::string s){
-  std::cout << "Loading Data ... ";
+  std::string log_file = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/log.txt";
+  print_log(log_file, "Loading Data ... ");
   std::ifstream input(s);
   std::string info;
   std::vector<std::string> v;
@@ -161,7 +215,7 @@ void Game::load_data(std::string s){
   }
   //create_map();
   input.close();
-  std::cout << "Complete" << std::endl;
+  print_log(log_file, "Complete");
 }
 
 Location Game::create_Location(std::string s){
@@ -199,7 +253,7 @@ int Game::status(bool print){
   if(!print){
 
   }
-  std::cout << "Play: " << play << std::endl;
+  std::cout << "Play: " << play_game << std::endl;
   std::cout << "------------------" << std::endl;
   std::cout << "Map size: " << map.size() << std::endl;
   for(int i = 0; i < map.size(); i++){

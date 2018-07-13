@@ -13,7 +13,7 @@ class Player: public Character{
   Location* current;
 
   //methods
-  Item get_item(std::string);
+
 public:
   Player();
   Player(std::string n, int h, int mh, int s[4], Item w, Item a, int next_level);
@@ -26,6 +26,8 @@ public:
   void print_inventory();
   void add_exp(int e);
   void add_item(Item d);
+  Item* get_item(std::string);
   void remove_item(std::string s);
   void battle(Enemy &E);
+  friend std::string compress(Player P);
 };

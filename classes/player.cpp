@@ -40,29 +40,38 @@ void Player::move(){
 Location* Player::get_location(){
   return current;
 }
+
 void Player::set_location(Location* L){
   current = L;
 }
 
-Item Player::get_item(std::string s){
+Item* Player::get_item(std::string s){
   for(int i = 0; i < inventory.size(); i++){
     if(inventory[i].get_name() == s){
-      return inventory[i];
+      return &inventory[i];
     }
   }
   std::cout << "Sorry. That item is not in your inventory" << std::endl;
-  return Item();
+  return nullptr;
+
 }
 void Player::use_item(Item *a){
+  //empty pointer
+  if(!a){
+    return;
+  }
   int s = a->get_stat();
   if(a->get_type() == "potion"){
     health = (health + s > max_health) ? max_health : health + s;
     remove_item(a->get_name());
   }
   else if(a->get_type() == "weapon"){
+    std::cout << "Use weapon " << *a << std::endl;
     Item w = weapon;
     weapon = *a;
+    std::cout << "weapon equipped = " << *a << std::endl;
     *a = w;
+    std::cout << "Inventory item is now " << *a << std::endl;
   }
   else{
     Item d = armor;
@@ -85,11 +94,12 @@ void Player::battle(Enemy &E){
       print_inventory();
       std::string c;
       std::getline(std::cin, c);
-      Item i = get_item(c);
-      if(!i.get_stat()){
+      Item *I = get_item(c);
+      //nullprt if no item c in inventory
+      if(!I){
         continue;
       }
-      use_item(&i);
+      use_item(I);
       defend(E.attack());
     }
     else if (s == "attack"){
@@ -143,14 +153,17 @@ void Player::add_exp(int e){
 }
 
 void Player::add_item(Item d){
+  std::cout << "Adding item " << d << "to inventory" << std::endl;
   for(int i = 0; i < inventory.size(); i++){
     if(inventory[i].get_name() == d.get_name()){
       quantity[i]++;
       return;
     }
   }
+  std::cout << "inventory does not contain item. Adding" << std::endl;
   inventory.push_back(d);
   quantity.push_back(1);
+  print_inventory();
 }
 
 void Player::remove_item(std::string s){
