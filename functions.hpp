@@ -4,11 +4,12 @@
 #include <iostream>
 #include <sstream>
 #include "classes/player.hpp"
+#include <nlohmann/json.hpp>
 
 #pragma once
 
 void assign(int a[], int b[], int size);
 void assign(std::vector <Location *> &a, std::vector <Location *> b);
 std::vector <std::string> split(std::string s, char delim);
-std::string compress(Location L);
-std::string compress(Player P);
+nlohmann::json compress(Location L);
+nlohmann::json compress(Player P);

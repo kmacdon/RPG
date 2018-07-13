@@ -1,6 +1,7 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "location.hpp"
+#include <nlohmann/json.hpp>
 
 #pragma once
 
@@ -12,7 +13,7 @@ private:
   //std::vector<Dungeon> dungeons;
   void create_map();
   //these following functions are used when loading data
-  Location create_Location(std::string s);
+  Location create_Location(nlohmann::json j);
   Player create_Player(std::string s);
 public:
   Game();

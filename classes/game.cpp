@@ -4,6 +4,7 @@
 #include "../functions.hpp"
 #include "../error.hpp"
 
+
 Game::Game(){
   play_game = true;
   P = Player();
@@ -186,16 +187,20 @@ void Game::load_data(std::string s){
   std::string log_file = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/log.txt";
   print_log(log_file, "Loading Data ... ");
   std::ifstream input(s);
-  std::string info;
-  std::vector<std::string> v;
   if(!input){
     std::cout << "file failed to open" << std::endl;
     return;
   }
 
+  std::string info;
+  std::vector<std::string> v;
+
   //get input
   while(std::getline(input, info)){
-    v = split(info, ',');
+    nlohmann::json object;
+    input >> object;
+    map.push_back(create_Location(object));
+    /*
     if(v[0] == "Location"){
       v.erase(v.begin());
       for(int i = 0; i < v.size() - 1; i++){
@@ -211,20 +216,21 @@ void Game::load_data(std::string s){
       }
       std::string param = v[0];
       create_Player(param);
-    }
+    }*/
   }
   //create_map();
   input.close();
   print_log(log_file, "Complete");
 }
 
-Location Game::create_Location(std::string s){
-  std::vector<std::string> v;
-  v = split(s, ':');
-  std::string n;
-  float er;
-  std::vector<std::string> e;
+Location Game::create_Location(nlohmann::json j){
 
+  //std::vector<std::string> v;
+  //v = split(s, ':');
+  std::string n = j["name"];
+  float er = j["encounter_rate"];
+  std::vector<std::string> e = j["enemies"];
+  /*
   //values are stored in type:value format
   for(int i = 0; i < v.size() - 1; i+=2){
     if(v[i] == "name"){
@@ -239,7 +245,7 @@ Location Game::create_Location(std::string s){
     else{
       std::cout << "Error: Invalid data type \'" << v[i] << "\'." << std::endl;
     }
-  }
+  }*/
   return Location(n, er, e);
 }
 

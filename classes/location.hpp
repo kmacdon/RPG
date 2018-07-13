@@ -1,10 +1,11 @@
 #include <string>
 #include <vector>
 #include "enemy.hpp"
-
+#include <nlohmann/json.hpp>
 
 
 #pragma once
+
 
 class Location{
 private:
@@ -29,5 +30,21 @@ public:
   Location* get_connection(std::string s);
   std::vector<std::string> list_connections();
   std::string get_description();
-  friend std::string compress(Location L);
+  friend nlohmann::json compress(Location L);
+  friend void to_json(nlohmann::json& j, const Location& L);
+  friend void from_json(const nlohmann::json& j, Location& L);
 };
+
+void to_json(nlohmann::json& j, const Location& L);
+void from_json(const nlohmann::json& j, Location& L);
+
+void to_json(nlohmann::json& j, const Location& L) {
+    j = nlohmann::json{{"name", L.name}, {"encounter_rate", L.encounter_rate}, {"enemies", L.enemies}, {"connections", L.connections}};
+}
+
+void from_json(const nlohmann::json& j, Location& L) {
+    L.name = j.at("name").get<std::string>();
+    L.encounter_rate = j.at("encounter_rate").get<float>();
+    L.enemies = j.at("enemies").get<std::vector<std::string> >();
+    L.connections = j.at("connections").get<std::vector<Location *> >();
+}

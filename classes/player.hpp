@@ -29,5 +29,5 @@ public:
   Item* get_item(std::string);
   void remove_item(std::string s);
   void battle(Enemy &E);
-  friend std::string compress(Player P);
+  friend nlohmann::json compress(Player P);
 };
