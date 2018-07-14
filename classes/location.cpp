@@ -2,7 +2,13 @@
 #include "../functions.hpp"
 #include <cstdlib>
 #include <iostream>
+#include "enemy.hpp"
 
+void Location::list_enemies(){
+  for(int i = 0; i < enemies.size(); i++){
+    std::cout << enemies[i] << std::endl;
+  }
+}
 Location::Location(){
   name = "NULL";
 }

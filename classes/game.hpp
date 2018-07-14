@@ -7,15 +7,12 @@
 
 class Game{
 private:
-  bool play_game;
   Player P;
   std::vector<Location> map;
   //std::vector<Dungeon> dungeons;
   void create_map();
-  //these following functions are used when loading data
-  Location create_Location(nlohmann::json j);
-  Player create_Player(std::string s);
 public:
+  bool play_game;
   Game();
   ~Game();
   void initialize(bool reload);

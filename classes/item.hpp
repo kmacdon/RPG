@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include "json_conversion.hpp"
 
 #pragma once
 
@@ -15,6 +16,8 @@ public:
   int get_stat();
   std::string get_type();
   std::string get_name();
+  friend void to_json(nlohmann::json& j, const Item& I);
+  friend void from_json(const nlohmann::json& j, Item& I);
 };
 
 std::ostream& operator<<(std::ostream& lhs, const Item& rhs);
