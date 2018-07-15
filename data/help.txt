@@ -1,0 +1,9 @@
+  equip <item> : Used on the inventory screen to equip or use an item
+  whereami : Display current location
+  whoami : Display your name
+  move : Bring up map to allow selection of new location
+  save : Save the game
+  quit : Quit the game, note you will not be prompted to save before!
+  reload : Reload your last save game
+  inventory : Open up inventory screen to see or use items
+  stats : Print your current stats

@@ -2,14 +2,19 @@
 #include "../functions.hpp"
 #include <cmath>
 
+
+//////////////////////////////////////////////////////////////
+//////////////////////  Constructors  ////////////////////////
+//////////////////////////////////////////////////////////////
+
 Character::Character(){
   name = "NULL";
   health = 1;
   max_health = 1;
   int s[4] = {1, 1, 1, 1};
   assign(skills, s, 4);
-  weapon = Item("axe", Weapon, 5);
-  armor = Item("iron mail", Armor, 5);
+  weapon = Item("rusty axe", Weapon, 2);
+  armor = Item("rusty mail", Armor, 2);
   alive = true;
 }
 
@@ -36,9 +41,9 @@ int Character::attack(){
   return round((.8*skills[0] + weapon.get_stat() + a));
 }
 
-std::string Character::get_name(){
-    return name;
-}
+//////////////////////////////////////////////////////////////
+//////////////////////  Methods  /////////////////////////////
+//////////////////////////////////////////////////////////////
 
 void Character::defend(int a){
   int d = round(.7*skills[1] + armor.get_stat());
@@ -51,15 +56,7 @@ void Character::defend(int a){
   }
 }
 
-int Character::get_speed(){
-  return skills[2];
-}
-
 void Character::print_stats(){
-  std::cout << "Name: " << name << "\tHealth: " << health << "/" << max_health << std::endl;
-  std::cout << "Weapon: " << weapon.get_name() << "\tArmor: " << armor.get_name() << std::endl;
-}
-
-bool Character::is_alive(){
-  return alive;
+  std::cout << bold << "Name: " << unbold << name << bold << "\e\tHealth: " << unbold << health << "/" << max_health << std::endl;
+  std::cout << bold << "Weapon: " << unbold << weapon.get_name() << bold << "\tArmor: " << unbold << armor.get_name() << std::endl;
 }

@@ -1,6 +1,10 @@
 #include "enemy.hpp"
 #include "../functions.hpp"
 
+//////////////////////////////////////////////////////////////
+//////////////////////  Constructors  ////////////////////////
+//////////////////////////////////////////////////////////////
+
 Enemy::Enemy(){
   name = "enemy";
   int s[4] = {1, 1, 1, 1};
@@ -68,6 +72,7 @@ Enemy::Enemy(std::string n, int s[4]){
   experience = 1;
   loot_rate = .05;
 }
+
 Enemy::Enemy(std::string n, int h, int mh, int s[4], int e, Item w, Item a, Item l, float lr, std::string d){
   name = n;
   health = h;
@@ -81,11 +86,9 @@ Enemy::Enemy(std::string n, int h, int mh, int s[4], int e, Item w, Item a, Item
   description = d;
 }
 
-Enemy::~Enemy(){}
-
-int Enemy::drop_exp(){
-  return experience;
-}
+//////////////////////////////////////////////////////////////
+//////////////////////  Methods  /////////////////////////////
+//////////////////////////////////////////////////////////////
 
 bool Enemy::drop_loot(){
   return (float)rand()/(float)(RAND_MAX) < loot_rate;
@@ -94,8 +97,4 @@ bool Enemy::drop_loot(){
 Item Enemy::get_loot(){
   std::cout << "Acquired: " << loot << std::endl;
   return loot;
-}
-
-std::string Enemy::get_description(){
-  return description;
 }
