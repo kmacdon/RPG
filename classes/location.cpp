@@ -9,6 +9,7 @@ void Location::list_enemies(){
     std::cout << enemies[i] << std::endl;
   }
 }
+
 Location::Location(){
   name = "NULL";
 }

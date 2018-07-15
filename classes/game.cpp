@@ -2,11 +2,13 @@
 #include <fstream>
 #include <algorithm>
 #include "../functions.hpp"
-#include "../error.hpp"
 
 
-Game::Game(){
-  play_game = true;
+Game::Game() :play_game(true), NAME_LENGTH(50),
+SAVE_FILE("save.txt"),
+LOG_FILE("log.txt"),
+DEFAULT_FILE("default.txt"),
+MAP_FILE("map.txt"){
   P = Player();
 }
 
@@ -17,111 +19,140 @@ Game::~Game(){
 //create game instance
 void Game::initialize(bool reload){
   srand(time(0));
-  std::string log_file = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/log.txt";
-  print_log(log_file, "Initializing");
   //Load data
   std::string filename;
   if(reload){
-    filename = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/save.txt";
+    filename = SAVE_FILE;
   }
   else{
-    filename = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/default.txt";
+    filename = DEFAULT_FILE;
   }
   load_data(filename);
+  create_map();
+  //welcome screen and player info
+  std::string s;
+  std::ifstream input("welcome.txt");
+  while(std::getline(input, s)){
+    std::cout << s << std::endl;
+  }
+  input.close();
   while(1){
+
     std::cout << "What is your name?" << std::endl;
-    std::string s;
     std::getline(std::cin, s);
-    if(s != "NULL"){
+    if(s != "NULL" && s.length() < NAME_LENGTH){
       break;
     }
     std::cout << "Sorry, that is not a valid name" << std::endl;
   }
-
-  print_log(log_file, "Initialized");
+  std::cout << "Welcome " << s << std::endl;
+  P.set_name(s);
 }
 
+//add connections between locations in map
 void Game::create_map(){
-  std::cout << "Create map" << std::endl;
-  //randomly create connections for maps
-  //select location
-  for(int i = 0; i < map.size(); i++){
-    //select connections to add
-    std::cout << "Connecting map " << map[i].get_name() << std::endl;
-    for(int j = map[i].num_connections(); j < 3; j++ ){
+  std::ifstream input(MAP_FILE);
+  nlohmann::json j;
 
-      std::cout << "\tSelecting Random map" << std::endl;
-      //select random map
-      int limit = 0;
-      int a = i;
-      while(a == i){
-        a = rand() % map.size();
-        if(limit++ == 100){
-          std::cout << "Could not allocate all connections" << std::endl;
-          break;
-        }
-        if(a == i){
-          continue;
-        }
-        //ensure connection is new and empty
-        if(map[a].num_connections() == 3){
-          a = i;
-          continue;
-        }
-        for(int l = 0; l < map[i].num_connections(); l++){
-          if(map[l].get_name() == map[i].get_name()){
-            a = i;
-            break;
+  while(input >> j){
+
+    //create vector of pointers to locations and map them
+    if(j["object"] == "Mapping"){
+      std::vector<std::string> v = j.at("connections").get<std::vector<std::string> >();
+      std::vector<Location *> c;
+      for(int i = 0; i < v.size(); i++){
+        for(int j = 0; j < map.size(); j++){
+          if(v[i] == map[j].get_name()){
+            c.push_back(&map[j]);
           }
         }
       }
-      map[i].set_connection(&map[a]);
-      map[a].set_connection(&map[i]);
-      std::cout << "connection assigned" << std::endl;
-    }
 
+      //add pointers to location
+      std::string name = j.at("name").get<std::string>();
+      for(int i = 0; i < map.size(); i++){
+        if(map[i].get_name() == name){
+          map[i].add_connections(c);
+        }
+      }
+    }
+    else if(j["object"] == "P_Location"){
+      for(int i = 0; i < map.size(); i++){
+        if(j["current"] == map[i].get_name()){
+          P.set_location(&map[i]);
+        }
+      }
+    }
+    else if(j["object"] == "END"){
+      return;
+    }
+    else{
+      std::cout << "Data type not recognized in map.txt" << std::endl;
+    }
   }
 }
 
+//loop that contains top level game
 void Game::play(){
   while(P.is_alive() && play_game){
     std::cout << "What would you like to do?" << std::endl;
-    std::cout << "Inventory\tMove\tStats\tSave\tQuit" << std::endl;
     std::string s;
     std::getline(std::cin, s);
-    if(s == "Inventory"){
-      P.print_inventory();
-      std::cout << "use equip <item> to equip or quit to exit." << std::endl;
-      std::getline(std::cin, s);
-      std::vector<std::string> v = split(s, ' ');
-      if(v[0] == "compare"){
-        std::cout << P.get_item(v[1]) << P.get_item(v[2]) << std::endl;
-      }
-      else if(v[0] == "equip"){
-        Item *I = P.get_item(v[1]);
-        if(!I){
-          continue;
-        }
-        P.use_item(P.get_item(v[1]));
-      }
-      else if(v[0] == "quit"){
+    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
+    std::vector<std::string> v = split(s, ' ');
 
-      }
-      else {
-        std::cout << "Sorry, that command is not recognized" << std::endl;
-      }
+    //inventory management
+    if(v[0] == "inventory"){
+      P.print_inventory();
     }
-    else if(s == "Move"){
+    //change locations
+    else if(v[0] == "move"){
       P.move();
+      if(P.current->random_encounter()){
+        Enemy E = P.current->generate_enemy();
+        P.battle(E);
+      }
     }
-    else if(s == "Stats"){
+
+    //view stats
+    else if(v[0] == "stats"){
       P.print_stats();
     }
-    else if(s == "Save"){
+
+    //save
+    else if(v[0] == "save"){
       save();
     }
-    else if(s == "Quit"){
+
+    //quit game
+    else if(v[0] == "quit"){
       play_game = false;
+    }
+
+    //invisible commands
+    else if(v[0] == "whereami"){
+      std::cout << P.current->get_name() << std::endl;
+    }
+    else if(v[0] == "whoami"){
+      std::cout << P.get_name() << std::endl;;
+    }
+    else if(v[0] == "help"){
+      std::ifstream input("help.txt");
+      while(std::getline(input, s)){
+        std::cout << s << std::endl;
+      }
+      input.close();
+    }
+    else if(v[0] == "equip"){
+      for(int i = 2; i < v.size(); i++){
+        v[1] += " " + v[i];
+      }
+      Item *I = P.get_item(v[1]);
+
+      if(!I){
+        continue;
+      }
+      P.use_item(I);
     }
     else{
       std::cout << "Sorry, that command is not recognized" << std::endl;
@@ -131,11 +162,14 @@ void Game::play(){
 }
 
 void Game::save(){
-    std::string filename = "save.txt";
+    std::string filename = SAVE_FILE;
     std::cout << "Overwriting " << filename << std::endl;
     std::ofstream output(filename);
-    if(!output)
-      std::cout << "Error: File failed to open" << std::endl;
+    if(!output){
+      std::cout << "Error: File " << filename << " failed to open" << std::endl;
+      return;
+    }
+
     nlohmann::json j;
     for(int i = 0; i < map.size(); i++){
       j = map[i];
@@ -147,44 +181,51 @@ void Game::save(){
     k["object"] = "END";
     output << k << std::endl;
     output.close();
+
+    //Save map
+    output.open(MAP_FILE);
+    nlohmann::json j2;
+    j2["object"] = "P_Location";
+    j2["current"] = P.get_location()->get_name();
+    output << j2 << "\n";
+    nlohmann::json j3;
+
+    for(int i = 0; i < map.size(); i++){
+      std::vector<std::string> v;
+      v = P.get_location()->list_connections();
+      j3["object"] = "Mapping";
+      j3["connections"] = v;
+      output << j3 <<  std::endl;
+    }
+    output << k << std::endl;
+
+    output.close();
 }
 
 //load data from file
 void Game::load_data(std::string s){
-  std::string log_file = "/Users/KevinMacDonald/Dropbox/Programming/CPP/RPG/log.txt";
-  print_log(log_file, "Loading Data ... ");
   std::ifstream input(s);
   if(!input){
-    std::cout << "Error: File failed to open" << std::endl;
+    std::cout << "Error: File " << s << " failed to open" << std::endl;
     return;
   }
   nlohmann::json object;
   //get input
   int i = 0;
   while(input >> object){
-    print_log(log_file, "Loading Object " + std::to_string(i++));
-    //print_log(log_file, object.get<std::string>());
     if(object["object"] == "Location"){
-      print_log(log_file, "Loading Location");
       Location L = object;
-      print_log(log_file, "Location Loaded");
       map.push_back(L);
-      print_log(log_file, "Map added to");
     }
     else if(object["object"] == "Player"){
-      print_log(log_file, "Loaded Player");
       P = object;
-      print_log(log_file, "Player Loaded");
     }
     else if(object["object"] == "END"){
-      print_log(log_file, "End of Data");
       break;
     }
   }
   //create_map();
-  print_log(log_file, "Closing input file");
   input.close();
-  print_log(log_file, "Complete");
 }
 
 void Game::get_map(){
@@ -197,13 +238,15 @@ int Game::status(bool print){
   if(!print){
 
   }
-  std::cout << "Play: " << play_game << std::endl;
+  std::cout << "------------------" << std::endl;
+  std::cout << "Play Status: " << play_game << std::endl;
+  std::cout << "------------------" << std::endl;
+  std::cout << "Player: " << P.get_name() << std::endl;
   std::cout << "------------------" << std::endl;
   std::cout << "Map size: " << map.size() << std::endl;
   for(int i = 0; i < map.size(); i++){
     std::cout << map[i].get_name();
     map[i].print_connections();
-    std::cout << "\n................" << std::endl;
   }
   std::cout << "------------------" << std::endl;
   if(P.get_name() != "NULL"){

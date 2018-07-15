@@ -6,6 +6,7 @@
 #pragma once
 
 class Player: public Character{
+  friend class Game;
   int experience;
   int level;
   int next_level;

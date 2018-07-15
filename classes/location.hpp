@@ -7,6 +7,7 @@ class Enemy;
 #pragma once
 class Location{
 private:
+  friend class Game;
   std::vector<Location *> connections;
   float encounter_rate;
   std::vector<std::string> enemies; //save memory and reduce dependencies

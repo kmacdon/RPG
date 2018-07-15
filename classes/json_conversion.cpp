@@ -9,7 +9,7 @@ void to_json(nlohmann::json& j, const Item& I) {
 
 void from_json(const nlohmann::json& j, Item& I) {
     I.name = j.at("name").get<std::string>();
-    I.type = j.at("type").get<std::string>();
+    I.type = j.at("type").get<Type>();
     I.stat = j.at("stat").get<int>();
 }
 

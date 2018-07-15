@@ -40,6 +40,7 @@ void Player::move(){
 void Player::set_name(std::string s){
   name = s;
 }
+
 Location* Player::get_location(){
   return current;
 }
@@ -50,25 +51,31 @@ void Player::set_location(Location* L){
 
 Item* Player::get_item(std::string s){
   for(int i = 0; i < inventory.size(); i++){
-    if(inventory[i].get_name() == s){
+    std::string n = inventory[i].get_name();
+    std::transform(n.begin(), n.end(), n.begin(), ::tolower);
+    if(n == s){
       return &inventory[i];
     }
   }
   std::cout << "Sorry. That item is not in your inventory" << std::endl;
   return nullptr;
-
 }
+
 void Player::use_item(Item *a){
   //empty pointer
   if(!a){
     return;
   }
   int s = a->get_stat();
-  if(a->get_type() == "potion"){
+  if(a->get_type() == Potion){
+    if(health == max_health){
+      std::cout << "Already at max health." << std::endl;
+      return;
+    }
     health = (health + s > max_health) ? max_health : health + s;
     remove_item(a->get_name());
   }
-  else if(a->get_type() == "weapon"){
+  else if(a->get_type() == Weapon){
     Item w = weapon;
     weapon = *a;
     *a = w;
@@ -81,7 +88,8 @@ void Player::use_item(Item *a){
 }
 
 void Player::battle(Enemy &E){
-  std::cout << E.get_description() << std::endl;
+  system("clear");
+  std::cout << "You are attack by " << E.get_description() << std::endl;
 
   while(is_alive() && E.is_alive()){
     std::cout << "What would you like to do?" << std::endl;
@@ -116,6 +124,7 @@ void Player::battle(Enemy &E){
       std::cout << "Not a valid option" << std::endl;
       continue;
     }
+
   }
 
   //Player is dead

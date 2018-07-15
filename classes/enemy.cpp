@@ -5,9 +5,9 @@ Enemy::Enemy(){
   name = "enemy";
   int s[4] = {1, 1, 1, 1};
   assign(skills, s, 4);
-  weapon = Item("hand", "weapon", 1);
-  armor = Item("clothes", "armor", 1);
-  loot = Item("coins", "money", 1);
+  weapon = Item("hand", Weapon, 1);
+  armor = Item("clothes", Armor, 1);
+  loot = Item("coins", Money, 1);
   loot_rate = 0;
   experience = 1;
 }
@@ -17,9 +17,9 @@ Enemy::Enemy(std::string n){
   if(n == "wolf"){
     int s[4] = {2, 2, 3, 1};
     assign(skills, s, 4);
-    weapon = Item("claws", "weapon", 2);
-    armor = Item("fur", "armor", 2);
-    loot = Item("coin", "money", 1);
+    weapon = Item("claws", Weapon, 2);
+    armor = Item("fur", Armor, 2);
+    loot = Item("coin", Money, 1);
     description = "wolf";
     experience = 1;
     loot_rate = .05;
@@ -27,9 +27,9 @@ Enemy::Enemy(std::string n){
   else if(n == "bear"){
     int s[4] = {2, 2, 3, 1};
     assign(skills, s, 4);
-    weapon = Item("claws", "weapon", 4);
-    armor = Item("fur", "armor", 4);
-    loot = Item("coin", "money", 1);
+    weapon = Item("claws", Weapon, 4);
+    armor = Item("fur", Armor, 4);
+    loot = Item("coin", Money, 1);
     description = "bear";
     experience = 1;
     loot_rate = .05;
@@ -37,9 +37,9 @@ Enemy::Enemy(std::string n){
   else if(n == "goblin"){
     int s[4] = {2, 2, 3, 1};
     assign(skills, s, 4);
-    weapon = Item("dagger", "weapon", 2);
-    armor = Item("rusty mail", "armor", 2);
-    loot = Item("coin", "money", 1);
+    weapon = Item("dagger", Weapon, 2);
+    armor = Item("rusty mail", Armor, 2);
+    loot = Item("coin", Money, 1);
     description = "goblin";
     experience = 1;
     loot_rate = .05;
@@ -47,9 +47,9 @@ Enemy::Enemy(std::string n){
   else if(n == "orc"){
     int s[4] = {2, 2, 3, 1};
     assign(skills, s, 4);
-    weapon = Item("broadsword", "weapon", 2);
-    armor = Item("heavy mail", "armor", 2);
-    loot = Item("coin", "money", 1);
+    weapon = Item("broadsword", Weapon, 2);
+    armor = Item("heavy mail", Armor, 2);
+    loot = Item("coin", Money, 1);
     description = "orc";
     experience = 1;
     loot_rate = .05;
@@ -61,9 +61,9 @@ Enemy::Enemy(std::string n){
 
 Enemy::Enemy(std::string n, int s[4]){
   assign(skills, s, 4);
-  weapon = Item("claws", "weapon", 2);
-  armor = Item("fur", "armor", 2);
-  loot = Item("coin", "money", 1);
+  weapon = Item("claws", Weapon, 2);
+  armor = Item("fur", Armor, 2);
+  loot = Item("coin", Money, 1);
   description = "wolf";
   experience = 1;
   loot_rate = .05;

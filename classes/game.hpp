@@ -7,6 +7,14 @@
 
 class Game{
 private:
+  //Parameters
+  const int NAME_LENGTH;
+  const std::string SAVE_FILE;
+  const std::string LOG_FILE;
+  const std::string DEFAULT_FILE;
+  const std::string MAP_FILE;
+
+  //Game Objects
   Player P;
   std::vector<Location> map;
   //std::vector<Dungeon> dungeons;
@@ -16,7 +24,6 @@ public:
   Game();
   ~Game();
   void initialize(bool reload);
-  //void welcome_screen();
   void play();
   void save();
   void load_data(std::string s);
