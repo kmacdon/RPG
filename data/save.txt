@@ -1,0 +1,5 @@
+{"encounter_rate":0.4000000059604645,"enemies":["orc","wolf"],"name":"Misty Mountains","object":"Location"}
+{"encounter_rate":0.4000000059604645,"enemies":["orc","goblin"],"name":"Moria","object":"Location"}
+{"encounter_rate":0.4000000059604645,"enemies":["spider","wolf"],"name":"Lothlorien","object":"Location"}
+{"armor":{"name":"Cloth Armor","object":"Item","stat":2,"type":"armor"},"experience":0,"health":5,"inventory":[{"name":"Health Potion","object":"Item","stat":3,"type":"potion"}],"level":1,"max_health":5,"name":"Kevin","next_level":0,"object":"Player","quantity":[1],"weapon":{"name":"Wooden Sword","object":"Item","stat":2,"type":"weapon"}}
+{"object":"END"}

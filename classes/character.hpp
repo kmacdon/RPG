@@ -4,7 +4,7 @@
 
 class Character{
 protected:
-  //members
+  //Members
   int health;
   int max_health;
   int skills[4]; // Strength, Endurance, Speed, Luck
@@ -15,16 +15,17 @@ protected:
   bool alive;
 
 public:
+  //Constructors
   Character();
   Character(std::string n, int h, int mh, int s[4], int e, Item w, Item a);
   ~Character();
 
-  //methods
-  std::string get_name();
+  //Methods
+  std::string get_name() {return name;};
   int attack();
   void defend(int a);
   void print_stats();
-  int get_speed();
-  bool is_alive();
+  int get_speed() {return skills[2];};
+  bool is_alive() {return alive;};
 
 };

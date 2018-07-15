@@ -4,11 +4,10 @@
 #include <iostream>
 #include "enemy.hpp"
 
-void Location::list_enemies(){
-  for(int i = 0; i < enemies.size(); i++){
-    std::cout << enemies[i] << std::endl;
-  }
-}
+
+//////////////////////////////////////////////////////////////
+//////////////////////  Constructors  ////////////////////////
+//////////////////////////////////////////////////////////////
 
 Location::Location(){
   name = "NULL";
@@ -22,31 +21,20 @@ Location::Location(std::string n, float er, std::vector<std::string> e){
 
 }
 
-Location::~Location(){
-
-}
+//////////////////////////////////////////////////////////////
+//////////////////////  Methods  /////////////////////////////
+//////////////////////////////////////////////////////////////
 
 void Location::add_connections(std::vector<Location *> c){
   connections.resize(c.size());
   assign(connections, c);
 }
 //need to add srand(time(0)) when program starts
-bool Location::random_encounter(){
-  return (float)rand()/(float)(RAND_MAX) < encounter_rate;
-}
-
-int Location::num_connections(){
-  return connections.size();
-}
 
 void Location::print_connections(){
   for(int i = 0; i < connections.size(); i++){
     std::cout << connections[i]->get_name() << std::endl;
   }
-}
-
-void Location::set_connection(Location* L){
-    connections.push_back(L);
 }
 
 Location* Location::get_connection(std::string s){
@@ -58,6 +46,7 @@ Location* Location::get_connection(std::string s){
   std::cout << "Sorry. That is not a viable location." << std::endl;
   return 0;
 }
+
 std::vector<std::string> Location::list_connections(){
   std::vector<std::string> s;
   for(int i = 0; i < connections.size(); i++){
@@ -66,15 +55,11 @@ std::vector<std::string> Location::list_connections(){
   return s;
 }
 
+bool Location::random_encounter(){
+  return (float)rand()/(float)(RAND_MAX) < encounter_rate;
+}
+
 Enemy Location::generate_enemy(){
   int r = rand() % enemies.size();
   return Enemy(enemies[r]);
-}
-
-std::string Location::get_name(){
-  return name;
-}
-
-std::string Location::get_description(){
-  return description;
 }

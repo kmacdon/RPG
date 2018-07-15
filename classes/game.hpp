@@ -14,20 +14,28 @@ private:
   const std::string DEFAULT_FILE;
   const std::string MAP_FILE;
 
-  //Game Objects
+  //Members
   Player P;
   std::vector<Location> map;
   //std::vector<Dungeon> dungeons;
-  void create_map();
-public:
   bool play_game;
+
+  //Methods
+  void create_map();
+
+public:
+  //Constructors
   Game();
-  ~Game();
+  ~Game() {};
+
+  //Methods
   void initialize(bool reload);
+  void load_data(std::string s);
   void play();
   void save();
-  void load_data(std::string s);
-  int status(bool print = false);
   //void quit();
-  void get_map();
+  int status(bool print = false);
+
+  //Members
+
 };

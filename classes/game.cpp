@@ -3,18 +3,21 @@
 #include <algorithm>
 #include "../functions.hpp"
 
+//////////////////////////////////////////////////////////////
+//////////////////////  Constructors  ////////////////////////
+//////////////////////////////////////////////////////////////
 
 Game::Game() :play_game(true), NAME_LENGTH(50),
-SAVE_FILE("save.txt"),
+SAVE_FILE("data/save.txt"),
 LOG_FILE("log.txt"),
-DEFAULT_FILE("default.txt"),
-MAP_FILE("map.txt"){
+DEFAULT_FILE("data/default.txt"),
+MAP_FILE("data/map.txt"){
   P = Player();
 }
 
-Game::~Game(){
-
-}
+//////////////////////////////////////////////////////////////
+//////////////////////  Methods  /////////////////////////////
+//////////////////////////////////////////////////////////////
 
 //create game instance
 void Game::initialize(bool reload){
@@ -31,7 +34,7 @@ void Game::initialize(bool reload){
   create_map();
   //welcome screen and player info
   std::string s;
-  std::ifstream input("welcome.txt");
+  std::ifstream input("data/welcome.txt");
   while(std::getline(input, s)){
     std::cout << s << std::endl;
   }
@@ -47,6 +50,32 @@ void Game::initialize(bool reload){
   }
   std::cout << "Welcome " << s << std::endl;
   P.set_name(s);
+}
+
+//load data from file
+void Game::load_data(std::string s){
+  std::ifstream input(s);
+  if(!input){
+    std::cout << "Error: File " << s << " failed to open" << std::endl;
+    return;
+  }
+  nlohmann::json object;
+  //get input
+  int i = 0;
+  while(input >> object){
+    if(object["object"] == "Location"){
+      Location L = object;
+      map.push_back(L);
+    }
+    else if(object["object"] == "Player"){
+      P = object;
+    }
+    else if(object["object"] == "END"){
+      break;
+    }
+  }
+  //create_map();
+  input.close();
 }
 
 //add connections between locations in map
@@ -105,6 +134,18 @@ void Game::play(){
     if(v[0] == "inventory"){
       P.print_inventory();
     }
+    //equip items
+    else if(v[0] == "equip"){
+      for(int i = 2; i < v.size(); i++){
+        v[1] += " " + v[i];
+      }
+      Item *I = P.get_item(v[1]);
+
+      if(!I){
+        continue;
+      }
+      P.use_item(I);
+    }
     //change locations
     else if(v[0] == "move"){
       P.move();
@@ -142,17 +183,6 @@ void Game::play(){
         std::cout << s << std::endl;
       }
       input.close();
-    }
-    else if(v[0] == "equip"){
-      for(int i = 2; i < v.size(); i++){
-        v[1] += " " + v[i];
-      }
-      Item *I = P.get_item(v[1]);
-
-      if(!I){
-        continue;
-      }
-      P.use_item(I);
     }
     else{
       std::cout << "Sorry, that command is not recognized" << std::endl;
@@ -202,38 +232,7 @@ void Game::save(){
     output.close();
 }
 
-//load data from file
-void Game::load_data(std::string s){
-  std::ifstream input(s);
-  if(!input){
-    std::cout << "Error: File " << s << " failed to open" << std::endl;
-    return;
-  }
-  nlohmann::json object;
-  //get input
-  int i = 0;
-  while(input >> object){
-    if(object["object"] == "Location"){
-      Location L = object;
-      map.push_back(L);
-    }
-    else if(object["object"] == "Player"){
-      P = object;
-    }
-    else if(object["object"] == "END"){
-      break;
-    }
-  }
-  //create_map();
-  input.close();
-}
-
-void Game::get_map(){
-  for(int i = 0; i < map.size(); i++){
-      std::cout << map[i].get_name() << std::endl;
-  }
-}
-
+//Print general game details for debugging
 int Game::status(bool print){
   if(!print){
 

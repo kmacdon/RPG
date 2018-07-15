@@ -22,3 +22,13 @@ std::vector <std::string> split(std::string s, char delim){
   }
   return items;
 }
+
+std::ostream& unbold(std::ostream& os)
+{
+    return os << "\e[0m";
+}
+
+std::ostream& bold(std::ostream& os)
+{
+    return os << "\e[1m";
+}
