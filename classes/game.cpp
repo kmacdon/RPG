@@ -7,7 +7,8 @@
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
 
-Game::Game() :play_game(true), NAME_LENGTH(50),
+Game::Game() :play_game(true), reload(false),
+NAME_LENGTH(50),
 SAVE_FILE("data/save.txt"),
 LOG_FILE("log.txt"),
 DEFAULT_FILE("data/default.txt"),
@@ -20,7 +21,7 @@ MAP_FILE("data/map.txt"){
 //////////////////////////////////////////////////////////////
 
 //create game instance
-void Game::initialize(bool reload){
+void Game::initialize(){
   srand(time(0));
   //Load data
   std::string filename;
@@ -33,12 +34,6 @@ void Game::initialize(bool reload){
   load_data(filename);
   create_map();
   //welcome screen and player info
-  std::string s;
-  std::ifstream input("data/welcome.txt");
-  while(std::getline(input, s)){
-    std::cout << s << std::endl;
-  }
-  input.close();
   while(1){
 
     std::cout << "What is your name?" << std::endl;
@@ -164,7 +159,11 @@ void Game::play(){
     else if(v[0] == "save"){
       save();
     }
-
+    //reload Save
+    else if(v[0] == "reload"){
+      play_game = false
+      reload = true;
+    }
     //quit game
     else if(v[0] == "quit"){
       play_game = false;
@@ -191,6 +190,23 @@ void Game::play(){
 
 }
 
+void Game::start(){
+  system("clear");
+  std::string s;
+  std::ifstream input("data/welcome.txt");
+  while(std::getline(input, s)){
+    std::cout << s << std::endl;
+  }
+  input.close();
+  //include option to reload
+  while(play){
+    initialize();
+    play();
+    if(reload)
+      play = true;
+  }
+
+}
 void Game::save(){
     std::string filename = SAVE_FILE;
     std::cout << "Overwriting " << filename << std::endl;

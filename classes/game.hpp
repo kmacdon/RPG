@@ -19,6 +19,7 @@ private:
   std::vector<Location> map;
   //std::vector<Dungeon> dungeons;
   bool play_game;
+  bool reload;
 
   //Methods
   void create_map();
@@ -29,9 +30,10 @@ public:
   ~Game() {};
 
   //Methods
-  void initialize(bool reload);
+  void initialize();
   void load_data(std::string s);
   void play();
+  void start();
   void save();
   //void quit();
   int status(bool print = false);
