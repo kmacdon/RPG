@@ -2,7 +2,7 @@
 #include <fstream>
 #include <algorithm>
 #include "../functions.hpp"
-
+#include "../graphics/screen.hpp"
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
@@ -34,8 +34,8 @@ void Game::initialize(){
   load_data(filename);
   create_map();
   //welcome screen and player info
+  std::string s;
   while(1){
-
     std::cout << "What is your name?" << std::endl;
     std::getline(std::cin, s);
     if(s != "NULL" && s.length() < NAME_LENGTH){
@@ -118,6 +118,7 @@ void Game::create_map(){
 
 //loop that contains top level game
 void Game::play(){
+  Screen Main;
   while(P.is_alive() && play_game){
     std::cout << "What would you like to do?" << std::endl;
     std::string s;
@@ -127,7 +128,7 @@ void Game::play(){
 
     //inventory management
     if(v[0] == "inventory"){
-      P.print_inventory();
+      Main.Inventory(&P);
     }
     //equip items
     else if(v[0] == "equip"){
@@ -161,7 +162,7 @@ void Game::play(){
     }
     //reload Save
     else if(v[0] == "reload"){
-      play_game = false
+      play_game = false;
       reload = true;
     }
     //quit game
@@ -199,11 +200,11 @@ void Game::start(){
   }
   input.close();
   //include option to reload
-  while(play){
+  while(play_game){
     initialize();
     play();
     if(reload)
-      play = true;
+      play_game = true;
   }
 
 }

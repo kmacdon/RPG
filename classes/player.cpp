@@ -1,6 +1,6 @@
 #include "player.hpp"
 #include "../functions.hpp"
-
+#include <ncurses.h>
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
@@ -95,7 +95,8 @@ void Player::use_item(Item *a){
   switch(a->get_type()){
     case Potion:
       if(health == max_health){
-        std::cout << "Already at max health." << std::endl;
+        waddstr(stdscr, "Already at max health");
+        wrefresh(stdscr);
         break;
       }
       health = (health + s > max_health) ? max_health : health + s;
@@ -114,6 +115,9 @@ void Player::use_item(Item *a){
     default:
       break;
   }
+  std::string m = "Using item " + a->get_name();
+  waddstr(stdscr, m.c_str());
+  wrefresh(stdscr);
 }
 
 void Player::add_item(Item d){

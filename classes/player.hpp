@@ -7,7 +7,7 @@
 
 class Player: public Character{
   friend class Game;
-
+  friend class Screen;
   //members
   int experience;
   int level;

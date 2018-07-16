@@ -7,6 +7,7 @@
 
 class Game{
 private:
+  friend class Screen;
   //Parameters
   const int NAME_LENGTH;
   const std::string SAVE_FILE;
@@ -35,6 +36,7 @@ public:
   void play();
   void start();
   void save();
+  Player get_player() {return P;};
   //void quit();
   int status(bool print = false);
 
