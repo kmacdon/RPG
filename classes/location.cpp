@@ -43,7 +43,6 @@ Location* Location::get_connection(std::string s){
       return connections[i];
     }
   }
-  std::cout << "Sorry. That is not a viable location." << std::endl;
   return 0;
 }
 

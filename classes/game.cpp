@@ -240,9 +240,9 @@ void Game::main_screen(){
       //waddch(main, ch);
       s.push_back(ch);
     }
-    std::transform(s.begin(), s.end(), s.begin(), ::tolower);
-    std::vector<std::string> v = split(s, ' ');
 
+    std::vector<std::string> v = split(s, ' ');
+    std::transform(v[0].begin(), v[0].end(), v[0].begin(), ::tolower);
     //inventory management
     if(v[0] == "inventory"){
       wclear(main);
@@ -258,13 +258,15 @@ void Game::main_screen(){
       std::vector<std::string> c = P.current->list_connections();
       for(int i = 0; i < c.size(); i++){
         if(c[i] == v[1]){
-          P.current = P.current->get_connection(s);
+          P.current = P.current->get_connection(c[i]);
           change = true;
+          wrefresh(main);
           break;
         }
-        if(i == c.size()){
-          waddstr(main, "Sorry, that is not a valid location");
+        if(i == c.size() - 1  && !change){
+          waddstr(main, "Sorry, that is not a valid location\n");
           wrefresh(main);
+          break;
         }
       }
       if(change){
@@ -272,6 +274,8 @@ void Game::main_screen(){
           Enemy E = P.current->generate_enemy();
           P.battle(E, main);
         }
+        map_screen(map);
+        wrefresh(map);
       }
 
     }
