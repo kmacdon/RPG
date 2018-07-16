@@ -1,6 +1,5 @@
 #include "player.hpp"
 #include "../functions.hpp"
-#include <ncurses.h>
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
@@ -49,11 +48,16 @@ void Player::set_location(Location* L){
   current = L;
 }
 
-void Player::print_stats(){
-  Character::print_stats();
-  std::cout << "Experience: " << experience << "\tNext Level: " << next_level << std::endl;
-  std::cout << "Str: "<< skills[0] << "\tEnd: " << skills[1] << "\tSpd: " << skills[2];
-  std::cout << "\tLck: " << skills[3] << std::endl;
+void Player::print_stats(WINDOW * win){
+  //Character::print_stats();
+  wmove(win, 0, 0);
+  std::string s = "| Experience: " + std::to_string(experience) + "\n| Next Level:" + std::to_string(next_level) + "\n";
+  waddstr(win, s.c_str());
+  s = "| Str: " + std::to_string(skills[0]) + "  End: " + std::to_string(skills[1]) + "\n| Spd: " + std::to_string(skills[2]);
+  waddstr(win, s.c_str());
+  s = "  Lck: " + std::to_string(skills[3]) + "\n";
+  waddstr(win, s.c_str());
+  waddstr(win, "|__________________");
 }
 
 void Player::print_inventory(){
@@ -85,7 +89,7 @@ Item* Player::get_item(std::string s){
   return nullptr;
 }
 
-void Player::use_item(Item *a){
+void Player::use_item(Item *a, WINDOW * win){
   //empty pointer
   if(!a){
     return;
@@ -95,8 +99,8 @@ void Player::use_item(Item *a){
   switch(a->get_type()){
     case Potion:
       if(health == max_health){
-        waddstr(stdscr, "Already at max health");
-        wrefresh(stdscr);
+        waddstr(win, "Already at max health");
+        wrefresh(win);
         break;
       }
       health = (health + s > max_health) ? max_health : health + s;
@@ -116,8 +120,8 @@ void Player::use_item(Item *a){
       break;
   }
   std::string m = "Using item " + a->get_name();
-  waddstr(stdscr, m.c_str());
-  wrefresh(stdscr);
+  waddstr(win, m.c_str());
+  wrefresh(win);
 }
 
 void Player::add_item(Item d){
@@ -144,18 +148,36 @@ void Player::remove_item(std::string s){
   }
 }
 
-void Player::battle(Enemy &E){
+void Player::battle(Enemy &E, WINDOW * win){
   system("clear");
-  std::cout << "You are attack by " << E.get_description() << std::endl;
-
+  std::string s;
+  s = "You are attack by " + E.get_description() + "\n";
+  waddstr(win, s.c_str());
+  char ch;
+  int x = 0;
+  int y = 0;
   while(is_alive() && E.is_alive()){
-    std::cout << "What would you like to do?" << std::endl;
-    std::cout << "Attack\tUse Item" << std::endl;
+    waddstr(win, "What would you like to do?");
     std::string s;
-    std::getline(std::cin, s);
-
+    while(1){
+      ch = wgetch(win);
+      //wmove(main, y, ++x);
+      if(ch == '\n'){
+        x = 0;
+        waddch(win, ch);
+        wmove(win, ++y, x);
+        break;
+      }
+      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
+        ch = '\b';
+        waddch(win, ch);
+        return;
+      }
+      //waddch(main, ch);
+      s.push_back(ch);
+    }
     if(s == "Use Item"){
-      std::cout << "Which item would you like to use?" << std::endl;
+      waddstr(win, "Which item would you like to use?\n");
       print_inventory();
       std::string c;
       std::getline(std::cin, c);
@@ -164,7 +186,7 @@ void Player::battle(Enemy &E){
       if(!I){
         continue;
       }
-      use_item(I);
+      use_item(I, win);
       defend(E.attack());
     }
     else if (s == "attack"){
@@ -178,7 +200,7 @@ void Player::battle(Enemy &E){
       }
     }
     else {
-      std::cout << "Not a valid option" << std::endl;
+      waddstr(win, "Not a valid option");
       continue;
     }
 

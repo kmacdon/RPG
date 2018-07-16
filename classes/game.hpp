@@ -33,6 +33,9 @@ public:
   //Methods
   void initialize();
   void load_data(std::string s);
+  void inventory_screen(WINDOW * win);
+  void main_screen();
+  void map_screen(WINDOW * win);
   void play();
   void start();
   void save();

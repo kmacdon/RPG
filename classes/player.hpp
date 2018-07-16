@@ -2,7 +2,7 @@
 #include "location.hpp"
 #include "enemy.hpp"
 #include "json_conversion.hpp"
-
+#include <ncurses.h>
 #pragma once
 
 class Player: public Character{
@@ -27,15 +27,15 @@ public:
   Location* get_location();
   void set_location(Location *L);
 
-  void print_stats();
+  void print_stats(WINDOW * win);
   void print_inventory();
   void add_exp(int e);
   //Item Functionss
   void add_item(Item d);
-  void use_item(Item *a);
+  void use_item(Item *a, WINDOW * win);
   Item* get_item(std::string);
   void remove_item(std::string s);
-  void battle(Enemy &E);
+  void battle(Enemy &E, WINDOW * win);
 
   //Setters
   void set_name(std::string n) {name = n;};
