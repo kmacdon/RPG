@@ -33,12 +33,13 @@ public:
   //Methods
   void initialize();
   void load_data(std::string s);
+  void welcome_screen(WINDOW * win);
   void inventory_screen(WINDOW * win);
   void main_screen();
   void map_screen(WINDOW * win);
   void play();
   void start();
-  void save();
+  void save(WINDOW * win);
   Player get_player() {return P;};
   //void quit();
   int status(bool print = false);

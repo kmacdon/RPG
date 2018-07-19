@@ -1,5 +1,5 @@
 #include "item.hpp"
-
+#include <ncurses.h>
 #pragma once
 
 class Character{
@@ -22,9 +22,8 @@ public:
 
   //Methods
   std::string get_name() {return name;};
-  int attack();
-  void defend(int a);
-  void print_stats();
+  int attack(WINDOW * win);
+  void defend(WINDOW * win, int a);
   int get_speed() {return skills[2];};
   bool is_alive() {return alive;};
 

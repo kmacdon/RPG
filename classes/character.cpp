@@ -32,8 +32,9 @@ Character::Character(std::string n, int h, int mh, int s[4], int e, Item w, Item
 Character::~Character(){}
 
 //maybe add random element to this and defend
-int Character::attack(){
-  std::cout << name << " attacks with " << weapon.get_name() << " and deals ";
+int Character::attack(WINDOW * win){
+  std::string s =  name + " attacks with " + weapon.get_name() + " and deals ";
+  waddstr(win, s.c_str());
   int a = 0;
   //Luck factor
   if((float)rand()/(float)RAND_MAX < .05*skills[3])
@@ -45,18 +46,15 @@ int Character::attack(){
 //////////////////////  Methods  /////////////////////////////
 //////////////////////////////////////////////////////////////
 
-void Character::defend(int a){
+void Character::defend(WINDOW * win, int a){
   int d = round(.7*skills[1] + armor.get_stat());
   d = (d > a) ? 1 : a - d;
   health -= d;
-  std::cout << d << " points of damage!" << std::endl;
+  std::string s = std::to_string(d) + " points of damage!\n";
+  waddstr(win, s.c_str());
   if(health <= 0){
     alive = false;
-    std::cout << name << " has died!" << std::endl;
+    s = name + " has died!\n";
+    waddstr(win, s.c_str());
   }
-}
-
-void Character::print_stats(){
-  std::cout << bold << "Name: " << unbold << name << bold << "\e\tHealth: " << unbold << health << "/" << max_health << std::endl;
-  std::cout << bold << "Weapon: " << unbold << weapon.get_name() << bold << "\tArmor: " << unbold << armor.get_name() << std::endl;
 }

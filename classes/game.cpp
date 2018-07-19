@@ -34,22 +34,12 @@ void Game::initialize(){
   }
   load_data(filename);
   create_map();
-  //welcome screen and player info
-  std::string s;
-  while(1){
-    std::cout << "What is your name?" << std::endl;
-    std::getline(std::cin, s);
-    if(s != "NULL" && s.length() < NAME_LENGTH){
-      break;
-    }
-    std::cout << "Sorry, that is not a valid name" << std::endl;
-  }
-  std::cout << "Welcome " << s << std::endl;
-  P.set_name(s);
 }
 
 //load data from file
 void Game::load_data(std::string s){
+
+  print_log(LOG_FILE, "Load Data", 1, false);
   std::ifstream input(s);
   if(!input){
     std::cout << "Error: File " << s << " failed to open" << std::endl;
@@ -59,6 +49,13 @@ void Game::load_data(std::string s){
   //get input
   int i = 0;
   while(input >> object){
+    if(object["object"] != "END"){
+      std::string s = object.at("object").get<std::string>();
+      print_log(LOG_FILE, s.c_str(), 1, false);
+      s = object.at("name").get<std::string>();
+      print_log(LOG_FILE, s.c_str(), 1, false);
+    }
+
     if(object["object"] == "Location"){
       Location L = object;
       map.push_back(L);
@@ -74,116 +71,56 @@ void Game::load_data(std::string s){
   input.close();
 }
 
-void Game::inventory_screen(WINDOW * win){
-    const std::string log_file = "log.txt";
-    print_log(log_file, "Opening inventory screen", 0, false);
-    char a = 'a';
-    initscr();
-    cbreak();
-    noecho();
-    keypad(win, TRUE);
-    //WINDOW * main = newwin(40, 40, 0, 0);
+void Game::welcome_screen(WINDOW * win){
+  //Welcome Screen
+  int y = 0;
+  std::string s;
+  std::ifstream input("data/welcome.txt");
+  while(std::getline(input, s)){
+    waddstr(win, s.c_str());
+    wmove(win, y++, 0);
+  }
+  input.close();
 
-    int breaks[P.inventory.size()];
-    int x = 0;
-    int y = 0;
-    //Display inventory screen and get selections
+  //Player info
+  //get input
+  s.clear();
+  wmove(win, ++y, 0);
+  waddstr(win, "What is your name?");
+  wmove(win, ++y, 0);
+
+  int ch;
+  while(1){
     while(1){
-      print_log(log_file, "Entering Loop", 1);
-      int ch;
-      wmove(win, 0, 0);
-      if(P.inventory.size() == 0){
-        waddstr(win, "Your inventory is empty. Press \'q\' to exit.");
-        wrefresh(win);
-        while(1){
-          ch = wgetch(win);
-          if(ch == 'q')
-            break;
-        }
+      ch = wgetch(win);
+      //wmove(win, y, ++x);
+      if(ch == '\n'){
+        waddch(win, ch);
+        wmove(win, ++y, 0);
         break;
       }
-
-      //create inventory screen
-      int breaks[P.inventory.size()];
-      std::string a = "Inventory size: " + std::to_string(P.inventory.size());
-      print_log(log_file, a, 1);
-      for(int i = 0; i < P.inventory.size(); i++){
-        waddstr(win, P.inventory[i].get_name().c_str());
-        waddch(win, '\n');
-        wmove(win, i + 1, 0);
-        breaks[i] = P.inventory[i].get_name().length();
-        a = "Break " + std::to_string(i) + ": " + std::to_string(breaks[i]);
-        print_log(log_file, a, 2);
-        a = "Placing " + P.inventory[i].get_name() + " at position " + std::to_string(i) + ",0";
-        print_log(log_file, a, 2);
+      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
+        ch = '\b';
+        waddch(win, ch);
+        return;
       }
-      if(y >= P.inventory.size()){
-        print_log(log_file, "y > i", 2);
-        y = 0;
-      }
-      wmove(win, y, 0);
-
-      print_log(log_file, "Inventory Printed", 2);
-      a = "Current x = " + std::to_string(x);
-      print_log(log_file, a, 2);
-      a = "Current y = " + std::to_string(y);
-      print_log(log_file, a, 2);
-
-      wrefresh(win);
-      //wmove(win, y, breaks[x]);
-      ch = mvwgetch(win, y, breaks[x]);
-
-      Item *I = nullptr;
-      //Get input
-      std::string v;
-
-      //key selection
-      switch (ch){
-        case KEY_LEFT:
-          break;
-        case KEY_RIGHT:
-          break;
-        case KEY_UP:
-          print_log(log_file, "Input up", 3);
-          y--;
-          if(y <= 0)
-            y = 0;
-          v = "y = " + std::to_string(y);
-          print_log(log_file, v, 3);
-          wmove(win, y, breaks[y]);
-          break;
-        case KEY_DOWN:
-          print_log(log_file, "Input down", 3);
-          y++;
-          if(y >= P.inventory.size())
-            y = P.inventory.size() - 1;
-          v = "y = " + std::to_string(y);
-          print_log(log_file, v, 3);
-          wmove(win, y, breaks[y]);
-          break;
-        //selection made
-        case '\n':
-            I = &P.inventory[y];
-            v = "Selected " + I->get_name();
-            print_log(log_file, v, 3);
-          break;
-        default:
-          break;
-      }
-      if(I){
-        wmove(win, 0, 20);
-        P.use_item(I, win);
-        wrefresh(win);
-      }
-      else if(ch == 'q'){
-        break;
-      }
-      wrefresh(win);
-      wclear(win);
+      //waddch(win, ch);
+      s.push_back(ch);
     }
-    echo();
-    nocbreak();
-    endwin();
+    if(s != "NULL" && s.length() < NAME_LENGTH){
+      break;
+    }
+    waddstr(win, "Sorry, that is not a valid name.");
+    wmove(win, ++y, 0);
+  }
+  P.set_name(s);
+  s = "Welcome " + s;
+  waddstr(win, s.c_str());
+  wmove(win, ++y, 0);
+}
+
+void Game::inventory_screen(WINDOW * win){
+
 }
 
 void Game::main_screen(){
@@ -194,15 +131,23 @@ void Game::main_screen(){
   keypad(main, TRUE);
   nocbreak();
   echo();
-  std::string log_file = "log.txt";
   int x = 0;
   int y = 0;
-  print_log(log_file, "Beginning loop", 0, false);
-
+  print_log(LOG_FILE, "Beginning loop", 0, false);
+  welcome_screen(main);
+  wrefresh(main);
+  //start game
+  int ch = wgetch(main);
   //Refresh map
+  wclear(main);
   map_screen(map);
   wrefresh(map);
   while(P.is_alive() && play_game){
+    if(y > 23){
+      y = 0;
+      wclear(main);
+      wrefresh(main);
+    }
     //Refresh stats
     P.print_stats(info);
     wrefresh(info);
@@ -210,13 +155,13 @@ void Game::main_screen(){
 
 
     std::string a = "x = " + std::to_string(x) + " y = " + std::to_string(y);
-    print_log(log_file, a, 1);
+    print_log(LOG_FILE, a, 1);
     x = 0;
     wmove(main, y, x);
     waddstr(main, "What would you like to do?");
     ++y;
     a = "x = " + std::to_string(x) + " y = " + std::to_string(y);
-    print_log(log_file, a, 1);
+    print_log(LOG_FILE, a, 1);
     wmove(main, y, x);
     wrefresh(main);
     char ch;
@@ -246,14 +191,14 @@ void Game::main_screen(){
     //inventory management
     if(v[0] == "inventory"){
       wclear(main);
-      inventory_screen(main);
+      P.print_inventory(main);
       wclear(main);
     }
     //change locations
     else if(v[0] == "move"){
       bool change = false;
       for(int i = 2; i < v.size(); i++){
-        v[1] += v[i];
+        v[1] += " " + v[i];
       }
       std::vector<std::string> c = P.current->list_connections();
       for(int i = 0; i < c.size(); i++){
@@ -272,8 +217,10 @@ void Game::main_screen(){
       if(change){
         if(P.current->random_encounter()){
           Enemy E = P.current->generate_enemy();
+          wclear(main);
           P.battle(E, main);
         }
+        wclear(map);
         map_screen(map);
         wrefresh(map);
       }
@@ -281,7 +228,7 @@ void Game::main_screen(){
     }
     //save
     else if(v[0] == "save"){
-      save();
+      save(main);
     }
     //reload Save
     else if(v[0] == "reload"){
@@ -301,6 +248,7 @@ void Game::main_screen(){
       waddstr(main, P.get_name().c_str());
     }
     else if(v[0] == "help"){
+      wclear(main);
       std::ifstream input("help.txt");
       while(std::getline(input, s)){
         waddstr(main, s.c_str());
@@ -310,6 +258,7 @@ void Game::main_screen(){
     else{
       waddstr(main, "Sorry, that command is not recognized");
     }
+    wrefresh(main);
     y++;
     //wclear(main);
   }
@@ -323,7 +272,7 @@ void Game::main_screen(){
 void Game::map_screen(WINDOW * win){
   wmove(win, 0, 0);
   std::vector<std::string> c = P.current->list_connections();
-  std::string b = "Current: " + P.current->get_name() + "\n";
+  std::string b = "Current: \n" + P.current->get_name() + "\n";
   waddstr(win, b.c_str());
   waddstr(win, "Connections: \n");
   for(int i = 0; i < c.size(); i++){
@@ -335,22 +284,30 @@ void Game::map_screen(WINDOW * win){
 void Game::create_map(){
   std::ifstream input(MAP_FILE);
   nlohmann::json j;
-
+  print_log(LOG_FILE, "Loading Data", 0);
   while(input >> j){
-
+    std::string a = j.at("object").get<std::string>();
+    print_log(LOG_FILE, a.c_str(), 1);
     //create vector of pointers to locations and map them
     if(j["object"] == "Mapping"){
+      std::string s = j.at("name").get<std::string>();
+      print_log(LOG_FILE, s.c_str(), 0);
       std::vector<std::string> v = j.at("connections").get<std::vector<std::string> >();
       std::vector<Location *> c;
+      //Loop through all connections listed
       for(int i = 0; i < v.size(); i++){
+        //loop through all other maps
         for(int j = 0; j < map.size(); j++){
+          //match the connection to the address of the location stored in map
           if(v[i] == map[j].get_name()){
+            s = "Adding " + map[j].get_name();
+            print_log(LOG_FILE, s.c_str(), 0);
             c.push_back(&map[j]);
           }
         }
       }
 
-      //add pointers to location
+      //add pointers to location creating its connection
       std::string name = j.at("name").get<std::string>();
       for(int i = 0; i < map.size(); i++){
         if(map[i].get_name() == name){
@@ -380,13 +337,6 @@ void Game::play(){
 }
 
 void Game::start(){
-  system("clear");
-  std::string s;
-  std::ifstream input("data/welcome.txt");
-  while(std::getline(input, s)){
-    std::cout << s << std::endl;
-  }
-  input.close();
   //include option to reload
   while(play_game){
     initialize();
@@ -397,12 +347,14 @@ void Game::start(){
 
 }
 
-void Game::save(){
+void Game::save(WINDOW * win){
     std::string filename = SAVE_FILE;
-    std::cout << "Overwriting " << filename << std::endl;
+    std::string s = "Overwriting " + filename;
+    waddstr(win, s.c_str());
     std::ofstream output(filename);
     if(!output){
-      std::cout << "Error: File " << filename << " failed to open" << std::endl;
+      s = "Error: File " + filename + " failed to open";
+      waddstr(win, s.c_str());
       return;
     }
 
@@ -428,9 +380,10 @@ void Game::save(){
 
     for(int i = 0; i < map.size(); i++){
       std::vector<std::string> v;
-      v = P.get_location()->list_connections();
+      v = map[i].list_connections();
       j3["object"] = "Mapping";
       j3["connections"] = v;
+      j3["name"] = map[i].get_name();
       output << j3 <<  std::endl;
     }
     output << k << std::endl;
