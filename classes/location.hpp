@@ -8,7 +8,6 @@ class Enemy;
 class Location{
 private:
   friend class Game;
-  friend class Screen;
 
   //Members
   std::vector<Location *> connections;
