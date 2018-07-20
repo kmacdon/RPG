@@ -1,5 +1,0 @@
-{"current":"Moria","object":"P_Location"}
-{"name":"Moria", "connections":["Misty Mountains","Lothlorien"],"object":"Mapping"}
-{"name":"Misty Mountains", "connections":["Moria"],"object":"Mapping"}
-{"name":"Lothlorien", "connections":["Moria"],"object":"Mapping"}
-{"object":"END"}

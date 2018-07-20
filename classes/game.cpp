@@ -10,10 +10,10 @@
 
 Game::Game() :play_game(true), reload(false),
 NAME_LENGTH(50),
-SAVE_FILE("data/save.txt"),
+SAVE_FILE("data/save.json"),
 LOG_FILE("log.txt"),
-DEFAULT_FILE("data/default.txt"),
-MAP_FILE("data/map.txt"){
+DEFAULT_FILE("data/default.json"),
+MAP_FILE("data/map.json"){
   P = Player();
 }
 
@@ -78,7 +78,6 @@ void Game::welcome_screen(WINDOW * win){
   std::ifstream input("data/welcome.txt");
   while(std::getline(input, s)){
     waddstr(win, s.c_str());
-    wmove(win, y++, 0);
   }
   input.close();
 
@@ -86,7 +85,7 @@ void Game::welcome_screen(WINDOW * win){
   //get input
   s.clear();
   wmove(win, ++y, 0);
-  waddstr(win, "What is your name?");
+  waddstr(win, "What is your name?\n");
   wmove(win, ++y, 0);
 
   int ch;
@@ -125,9 +124,9 @@ void Game::inventory_screen(WINDOW * win){
 
 void Game::main_screen(){
   initscr();
-  WINDOW * main = newwin(80, 50, 0, 0);
-  WINDOW * info = newwin(5, 19, 0, 61);
-  WINDOW * map = newwin(74, 19, 6, 61);
+  WINDOW * main = newwin(80, 60, 0, 0);
+  WINDOW * info = newwin(8, 19, 0, 60);
+  WINDOW * map = newwin(71, 19, 8, 60);
   keypad(main, TRUE);
   nocbreak();
   echo();
@@ -138,6 +137,7 @@ void Game::main_screen(){
   wrefresh(main);
   //start game
   int ch = wgetch(main);
+
   //Refresh map
   wclear(main);
   map_screen(map);
@@ -158,7 +158,7 @@ void Game::main_screen(){
     print_log(LOG_FILE, a, 1);
     x = 0;
     wmove(main, y, x);
-    waddstr(main, "What would you like to do?");
+    waddstr(main, "What would you like to do?\n");
     ++y;
     a = "x = " + std::to_string(x) + " y = " + std::to_string(y);
     print_log(LOG_FILE, a, 1);
@@ -224,7 +224,6 @@ void Game::main_screen(){
         map_screen(map);
         wrefresh(map);
       }
-
     }
     //save
     else if(v[0] == "save"){
@@ -251,7 +250,9 @@ void Game::main_screen(){
       wclear(main);
       std::ifstream input("help.txt");
       while(std::getline(input, s)){
+        s += "\n";
         waddstr(main, s.c_str());
+        y++;
       }
       input.close();
     }
@@ -259,7 +260,6 @@ void Game::main_screen(){
       waddstr(main, "Sorry, that command is not recognized");
     }
     wrefresh(main);
-    y++;
     //wclear(main);
   }
   if(play_game && reload){
@@ -267,18 +267,20 @@ void Game::main_screen(){
     wrefresh(main);
   }
   endwin();
+  y++;
 }
 
 void Game::map_screen(WINDOW * win){
   wmove(win, 0, 0);
   std::vector<std::string> c = P.current->list_connections();
-  std::string b = "Current: \n" + P.current->get_name() + "\n";
+  std::string b = "| Current: \n| -" + P.current->get_name() + "\n";
   waddstr(win, b.c_str());
-  waddstr(win, "Connections: \n");
+  waddstr(win, "| Connections: \n");
   for(int i = 0; i < c.size(); i++){
-    b = "-" + c[i] + "\n";
+    b = "| -" + c[i] + "\n";
     waddstr(win, b.c_str());
   }
+  waddstr(win, "|__________________\n");
 }
 //add connections between locations in map
 void Game::create_map(){
@@ -316,7 +318,7 @@ void Game::create_map(){
       }
     }
     else if(j["object"] == "P_Location"){
-      for(int i = 0; i < map.size(); i++){
+      for(int i = 0; i < size(); i++){
         if(j["current"] == map[i].get_name()){
           P.set_location(&map[i]);
         }
@@ -326,7 +328,7 @@ void Game::create_map(){
       return;
     }
     else{
-      std::cout << "Data type not recognized in map.txt" << std::endl;
+      std::cout << "Data type not recognized in map.json" << std::endl;
     }
   }
 }

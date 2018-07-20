@@ -1,0 +1,4 @@
+	whereami 	: Display current location.
+	whoami 		: Display player name.
+	move <Location> : Move to location if valid.
+	equip <Item> 	: Equip item if in inventory.

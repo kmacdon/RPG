@@ -48,9 +48,14 @@ void Player::set_location(Location* L){
 }
 
 void Player::print_stats(WINDOW * win){
-  //Character::print_stats();
   wmove(win, 0, 0);
-  std::string s = "| Experience: " + std::to_string(experience) + "\n| Next Level:" + std::to_string(next_level) + "\n";
+  std::string s = "| Name: " + name + "\n";
+  waddstr(win, s.c_str());
+  s = "| Level: " + std::to_string(level) + "\n";
+  waddstr(win, s.c_str());
+  s = "| Health: " + std::to_string(health) + "/" + std::to_string(max_health) + "\n";
+  waddstr(win, s.c_str());
+  s = "| Experience: " + std::to_string(experience) + "\n| Next Level:" + std::to_string(next_level) + "\n";
   waddstr(win, s.c_str());
   s = "| Str: " + std::to_string(skills[0]) + "  End: " + std::to_string(skills[1]) + "\n| Spd: " + std::to_string(skills[2]);
   waddstr(win, s.c_str());
