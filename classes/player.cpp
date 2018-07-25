@@ -1,6 +1,8 @@
 #include "player.hpp"
 #include "../functions.hpp"
 #include "../error.hpp"
+#include <fstream>
+
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
@@ -74,7 +76,7 @@ void Player::add_exp(WINDOW * win, int e){
       std::string s = "You leveled up! Now at level " + std::to_string(level);
       waddstr(win, s.c_str());
     }
-    s = std::to_string(next_level - experience) + " experience until the next level";
+    s = std::to_string(next_level - experience) + " experience until the next level.\n";
     waddstr(win, s.c_str());
 }
 
@@ -259,60 +261,86 @@ void Player::remove_item(std::string s){
 }
 
 void Player::battle(Enemy &E, WINDOW * win){
+  cbreak();
+  noecho();
   wclear(win);
   std::string s;
   s = "You are attacked by " + E.get_description() + "\n";
   waddstr(win, s.c_str());
-  char ch;
+  unsigned char ch;
   int x = 0;
   int y = 0;
+  wmove(win, ++y, x);
+  std::ofstream output("d.txt");
   while(is_alive() && E.is_alive()){
-    waddstr(win, "What would you like to do?");
-    std::string s;
-    while(1){
-      ch = wgetch(win);
-      //wmove(main, y, ++x);
-      if(ch == '\n'){
-        x = 0;
-        waddch(win, ch);
-        wmove(win, ++y, x);
+    wmove(win, y, 0);
+    //create inventory screen
+    int breaks[2] = {6, 16};
+    waddstr(win, "Attack");
+    wmove(win, y, breaks[0] + 2);
+    waddstr(win, "Use Item");
+    wmove(win, y, breaks[x]);
+
+    wrefresh(win);
+    ch = wgetch(win);
+
+    output << (int)ch << std::endl;
+    output << KEY_RIGHT << std::endl;
+    output.close();
+    //Get input
+    std::string v;
+    v = "x = " + std::to_string(x);
+    print_log("battle_log.txt", v, 3);
+    v = "y = " + std::to_string(y);
+    print_log("battle_log.txt", v, 3);
+    //key selection
+    switch ((int)ch){
+      case 4:
+        print_log("battle_log.txt", "Input left", 3);
+        x--;
+        if(x <= 0)
+          x = 0;
+        v = "x = " + std::to_string(x);
+        print_log("battle_log.txt", v, 3);
+        wmove(win, y, breaks[x]);
         break;
-      }
-      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
-        ch = '\b';
-        waddch(win, ch);
-        return;
-      }
-      //waddch(main, ch);
-      s.push_back(ch);
+      case 5:
+        print_log("battle_log.txt", "Input right", 3);
+        x++;
+        if(x >= 1)
+          x = 1;
+        v = "x = " + std::to_string(x);
+        print_log("battle_log.txt", v, 3);
+        wmove(win, y, breaks[x]);
+        break;
+      //selection made
+      case '\n':
+        y++;
+        if(x == 0){
+          print_log("battle_log.txt", "Selected Attack\n", 3);
+          if(get_speed() >= E.get_speed()){
+            defend(win, E.attack(win));
+            E.defend(win, attack(win));
+          }
+          else {
+            E.defend(win, attack(win));
+            defend(win, E.attack(win));
+          }
+        }
+        else if(x == 1){
+          wclear(win);
+          wrefresh(win);
+          print_inventory(win);
+          wclear(win);
+          wrefresh(win);
+          defend(win, E.attack(win));
+        }
+        break;
+      default:
+        break;
     }
-    if(s == "Use Item"){
-      waddstr(win, "Which item would you like to use?\n");
-      print_inventory(win);
-      std::string c;
-      std::getline(std::cin, c);
-      Item *I = get_item(win, c);
-      //nullprt if no item c in inventory
-      if(!I){
-        continue;
-      }
-      use_item(I, win);
-      defend(win, E.attack(win));
-    }
-    else if (s == "attack"){
-      if(get_speed() >= E.get_speed()){
-        E.defend(win, attack(win));
-        defend(win, E.attack(win));
-      }
-      else{
-        defend(win, E.attack(win));
-        E.defend(win, attack(win));
-      }
-    }
-    else {
-      waddstr(win, "Not a valid option");
-      continue;
-    }
+    wrefresh(win);
+    wclear(win);
 
   }
 
@@ -325,4 +353,7 @@ void Player::battle(Enemy &E, WINDOW * win){
   if(E.drop_loot())
     add_item(win, E.get_loot());
   wrefresh(win);
+
+  nocbreak();
+  echo();
 }

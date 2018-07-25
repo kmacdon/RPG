@@ -2,6 +2,7 @@
 #include "enemy.hpp"
 #include "location.hpp"
 #include <nlohmann/json.hpp>
+#include "dungeon.hpp"
 
 #pragma once
 
@@ -14,6 +15,7 @@ private:
   const std::string LOG_FILE;
   const std::string DEFAULT_FILE;
   const std::string MAP_FILE;
+  const std::string DUNGEON_FILE;
 
   //Members
   Player P;
@@ -24,7 +26,7 @@ private:
 
   //Methods
   void create_map();
-
+  Dungeon generate_dungeon(std::string s);
 public:
   //Constructors
   Game();
@@ -34,9 +36,9 @@ public:
   void initialize();
   void load_data(std::string s);
   void welcome_screen(WINDOW * win);
-  void inventory_screen(WINDOW * win);
   void main_screen();
   void map_screen(WINDOW * win);
+  void poi_screen(WINDOW * win);
   void play();
   void start();
   void save(WINDOW * win);

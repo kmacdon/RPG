@@ -14,6 +14,7 @@ private:
   float encounter_rate;
   std::vector<std::string> enemies; //save memory and reduce dependencies
   std::string description;
+  std::vector<std::string> poi;
 
 protected:
   std::string name;
@@ -29,6 +30,7 @@ public:
   void print_connections();
   Location* get_connection(std::string s);
   std::vector<std::string> list_connections();
+  std::vector<std::string> list_poi() {return poi;};
 
   bool random_encounter();
   Enemy generate_enemy();
