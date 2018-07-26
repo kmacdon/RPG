@@ -1,0 +1,13 @@
+July 25, 23:35:08 Exiting initialize()
+July 25, 23:35:08 Entering main_screen()
+July 25, 23:35:10 Splitting get_line()
+July 25, 23:35:10 Entering get_line()
+July 25, 23:35:12 Exiting get_line()
+July 25, 23:35:12 Split get_line()
+July 25, 23:35:12 Transform
+July 25, 23:35:12 Splitting get_line()
+July 25, 23:35:12 Entering get_line()
+July 25, 23:37:01 Exiting get_line()
+July 25, 23:37:01 Split get_line()
+July 25, 23:37:01 Transform
+July 25, 23:37:01 Exiting main_screen()

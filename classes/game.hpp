@@ -9,13 +9,6 @@
 class Game{
 private:
   friend class Screen;
-  //Parameters
-  const int NAME_LENGTH;
-  const std::string SAVE_FILE;
-  const std::string LOG_FILE;
-  const std::string DEFAULT_FILE;
-  const std::string MAP_FILE;
-  const std::string DUNGEON_FILE;
 
   //Members
   Player P;

@@ -5,17 +5,13 @@
 #include <ncurses.h>
 #include "../error.hpp"
 #include "dungeon.hpp"
+#include "../data/constants.hpp"
+#include "../screen.hpp"
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
 
-Game::Game() :play_game(true), reload(false),
-NAME_LENGTH(50),
-SAVE_FILE("data/save.json"),
-LOG_FILE("log.txt"),
-DEFAULT_FILE("data/default.json"),
-MAP_FILE("data/map.json"),
-DUNGEON_FILE("data/dungeons.json"){
+Game::Game() :play_game(true), reload(false){
   P = Player();
 }
 
@@ -25,6 +21,7 @@ DUNGEON_FILE("data/dungeons.json"){
 
 //create game instance
 void Game::initialize(){
+  print_log(MAIN_LOG, "Entering initialize()", false);
   srand(time(0));
   //Load data
   std::string filename;
@@ -34,50 +31,37 @@ void Game::initialize(){
   else{
     filename = DEFAULT_FILE;
   }
-  print_log(LOG_FILE, "load_data", 1,  false);
   load_data(filename);
-  print_log(LOG_FILE, "creating map");
   create_map();
+  print_log(MAIN_LOG, "Exiting initialize()", false);
 }
 
 //load data from file
 void Game::load_data(std::string s){
-
-  print_log(LOG_FILE, "Load Data", 1);
+  print_log(MAIN_LOG, "Entering load_data()");
   std::ifstream input(s);
   if(!input){
-    std::cout << "Error: File " << s << " failed to open" << std::endl;
+    std::string e = "Error: File " + s + " failed to open." ;
+    print_log(MAIN_LOG, e.c_str());
     return;
   }
   nlohmann::json object;
   //get input
   int i = 0;
   while(input >> object){
-    print_log(LOG_FILE, "Loading object", 1);
-    if(object["object"] != "END"){
-      std::string s = object.at("object").get<std::string>();
-      print_log(LOG_FILE, s.c_str(), 1);
-      s = object.at("name").get<std::string>();
-      print_log(LOG_FILE, s.c_str(), 1);
-    }
-
     if(object["object"] == "Location"){
-      print_log(LOG_FILE, "Assigning Location", 1, true);
       Location L = object;
       map.push_back(L);
-      print_log(LOG_FILE, "Assigned", 1, true);
     }
     else if(object["object"] == "Player"){
-      print_log(LOG_FILE, "Assigning Player", 1, true);
       P = object;
-      print_log(LOG_FILE, "Assigned", 1, true);
     }
     else if(object["object"] == "END"){
-      print_log(LOG_FILE, "Finished Loading", 1, true);
       break;
     }
   }
   input.close();
+  print_log(MAIN_LOG, "Exiting load_data()");
 }
 
 void Game::welcome_screen(WINDOW * win){
@@ -128,6 +112,7 @@ void Game::welcome_screen(WINDOW * win){
 }
 
 void Game::main_screen(){
+  print_log(MAIN_LOG, "Entering main_screen()");
   initscr();
   WINDOW * main = newwin(20, 60, 0, 0);
   WINDOW * info = newwin(8, 19, 0, 60);
@@ -138,7 +123,7 @@ void Game::main_screen(){
   echo();
   int x = 0;
   int y = 0;
-  print_log(LOG_FILE, "Beginning loop", 1);
+
   welcome_screen(main);
   wrefresh(main);
   //start game
@@ -166,46 +151,24 @@ void Game::main_screen(){
     poi_screen(poi);
     wrefresh(poi);
 
-    std::string a = "x = " + std::to_string(x) + " y = " + std::to_string(y);
-    print_log(LOG_FILE, a, 1);
     x = 0;
     wmove(main, ++y, x);
     wrefresh(main);
     waddstr(main, "What would you like to do?\n");
     ++y;
-    a = "x = " + std::to_string(x) + " y = " + std::to_string(y);
-    print_log(LOG_FILE, a, 1);
     wmove(main, y, x);
     wrefresh(main);
-    char ch;
-    std::string s;
-
-    //get input
-    while(1){
-      ch = wgetch(main);
-      //wmove(main, y, ++x);
-      if(ch == '\n'){
-        x = 0;
-        waddch(main, ch);
-        wmove(main, ++y, x);
-        break;
-      }
-      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
-        ch = '\b';
-        waddch(main, ch);
-        return;
-      }
-      //waddch(main, ch);
-      s.push_back(ch);
-    }
-
-    std::vector<std::string> v = split(s, ' ');
+    print_log(MAIN_LOG, "Splitting get_line()");
+    std::vector<std::string> v = split(get_line(main, y), ' ');
+    print_log(MAIN_LOG, "Split get_line()");
     std::transform(v[0].begin(), v[0].end(), v[0].begin(), ::tolower);
+    print_log(MAIN_LOG, "Transform");
     //inventory management
     if(v[0] == "inventory"){
       wclear(main);
       P.print_inventory(main);
       wclear(main);
+      y = 0;
     }
     //change locations
     else if(v[0] == "move"){
@@ -216,6 +179,7 @@ void Game::main_screen(){
       std::vector<std::string> c = P.current->list_connections();
       for(int i = 0; i < c.size(); i++){
         if(c[i] == v[1]){
+          print_log(MAIN_LOG, "Moving from " + P.current->get_name() + " to " + c[i]);
           P.current = P.current->get_connection(c[i]);
           change = true;
           wrefresh(main);
@@ -247,10 +211,14 @@ void Game::main_screen(){
       for(int i = 0; i < c.size(); i++){
         if(c[i] == v[1]){
           Dungeon D = generate_dungeon(c[i]);
+          print_log(MAIN_LOG, "Entering dungeon " + D.get_name());
           wclear(main);
           wrefresh(main);
           D.explore(main, P);
+          print_log(MAIN_LOG, "Deleting dungeon " + D.get_name());
           P.current->poi.erase(P.current->poi.begin() + i);
+          nocbreak();
+          echo();
           break;
         }
         if(i == c.size() - 1){
@@ -284,7 +252,8 @@ void Game::main_screen(){
     else if(v[0] == "help"){
       wclear(main);
       y = 0;
-      std::ifstream input("help.txt");
+      std::ifstream input(HELP_FILE);
+      std::string s;
       while(std::getline(input, s)){
         s += "\n";
         waddstr(main, s.c_str());
@@ -303,7 +272,7 @@ void Game::main_screen(){
     wrefresh(main);
   }
   endwin();
-  wmove(main, ++y, 0);
+  print_log(MAIN_LOG, "Exiting main_screen()");
 }
 
 void Game::poi_screen(WINDOW * win){
@@ -331,16 +300,15 @@ void Game::map_screen(WINDOW * win){
 }
 //add connections between locations in map
 void Game::create_map(){
+  print_log(MAIN_LOG, "Entering create_map()");
   std::ifstream input(MAP_FILE);
   nlohmann::json j;
-  print_log(LOG_FILE, "Loading Data", 0);
+
   while(input >> j){
     std::string a = j.at("object").get<std::string>();
-    print_log(LOG_FILE, a.c_str(), 1);
+    print_log(MAIN_LOG, a.c_str());
     //create vector of pointers to locations and map them
     if(j["object"] == "Mapping"){
-      std::string s = j.at("name").get<std::string>();
-      print_log(LOG_FILE, s.c_str(), 0);
       std::vector<std::string> v = j.at("connections").get<std::vector<std::string> >();
       std::vector<Location *> c;
       //Loop through all connections listed
@@ -349,8 +317,6 @@ void Game::create_map(){
         for(int j = 0; j < map.size(); j++){
           //match the connection to the address of the location stored in map
           if(v[i] == map[j].get_name()){
-            s = "Adding " + map[j].get_name();
-            print_log(LOG_FILE, s.c_str(), 0);
             c.push_back(&map[j]);
           }
         }
@@ -375,9 +341,10 @@ void Game::create_map(){
       return;
     }
     else{
-      std::cout << "Data type not recognized in map.json" << std::endl;
+      print_log(MAIN_LOG, "Error: Data type not recognized in map.json");
     }
   }
+  print_log(MAIN_LOG, "Exiting map_created()");
 }
 
 Dungeon Game::generate_dungeon(std::string s){
@@ -409,49 +376,51 @@ void Game::start(){
 }
 
 void Game::save(WINDOW * win){
-    std::string filename = SAVE_FILE;
-    std::string s = "Overwriting " + filename;
+  print_log(MAIN_LOG, "Saving Data");
+  std::string filename = SAVE_FILE;
+  std::string s = "Overwriting " + filename;
+  waddstr(win, s.c_str());
+  std::ofstream output(filename);
+  if(!output){
+    s = "Error: File " + filename + " failed to open";
+    print_log(MAIN_LOG, s);
     waddstr(win, s.c_str());
-    std::ofstream output(filename);
-    if(!output){
-      s = "Error: File " + filename + " failed to open";
-      waddstr(win, s.c_str());
-      return;
-    }
+    return;
+  }
 
-    //save locations
-    nlohmann::json j;
-    for(int i = 0; i < map.size(); i++){
-      j = map[i];
-      output << j << std::endl;
-    }
-    //save player
-    j = P;
+  //save locations
+  nlohmann::json j;
+  for(int i = 0; i < map.size(); i++){
+    j = map[i];
     output << j << std::endl;
-    nlohmann::json k;
-    k["object"] = "END";
-    output << k << std::endl;
-    output.close();
+  }
+  //save player
+  j = P;
+  output << j << std::endl;
+  nlohmann::json k;
+  k["object"] = "END";
+  output << k << std::endl;
+  output.close();
 
-    //Save map
-    output.open(MAP_FILE);
-    nlohmann::json j2;
-    j2["object"] = "P_Location";
-    j2["current"] = P.get_location()->get_name();
-    output << j2 << "\n";
-    nlohmann::json j3;
+  //Save map
+  output.open(MAP_FILE);
+  nlohmann::json j2;
+  j2["object"] = "P_Location";
+  j2["current"] = P.get_location()->get_name();
+  output << j2 << "\n";
+  nlohmann::json j3;
 
-    for(int i = 0; i < map.size(); i++){
-      std::vector<std::string> v;
-      v = map[i].list_connections();
-      j3["object"] = "Mapping";
-      j3["connections"] = v;
-      j3["name"] = map[i].get_name();
-      output << j3 <<  std::endl;
-    }
-    output << k << std::endl;
-    output.close();
-
+  for(int i = 0; i < map.size(); i++){
+    std::vector<std::string> v;
+    v = map[i].list_connections();
+    j3["object"] = "Mapping";
+    j3["connections"] = v;
+    j3["name"] = map[i].get_name();
+    output << j3 <<  std::endl;
+  }
+  output << k << std::endl;
+  output.close();
+  print_log(MAIN_LOG, "Data Saved");
 }
 
 //Print general game details for debugging
