@@ -1,5 +1,5 @@
 {"current":"Desolate Plain","object":"P_Location"}
-{"name":"Desolate Plain", "connections":["Small Foothills","Dense Forest"],"object":"Mapping"}
-{"name":"Small Foothills", "connections":["Desolate Plain"],"object":"Mapping"}
-{"name":"Dense Forest", "connections":["Desolate Plain"],"object":"Mapping"}
+{"connections":["Desolate Plain"],"name":"Small Foothills","object":"Mapping"}
+{"connections":["Small Foothills","Dense Forest"],"name":"Desolate Plain","object":"Mapping"}
+{"connections":["Desolate Plain"],"name":"Dense Forest","object":"Mapping"}
 {"object":"END"}

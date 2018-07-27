@@ -4,31 +4,27 @@
 #include <chrono>
 #include <ctime>
 
-void print_log(std::string f, std::string msg, int tabs, bool append){
+void print_log(std::string filename, std::string msg, bool append){
   std::ofstream error_file;
   if(append){
-    error_file.open(f, std::ios::app);
+    error_file.open(filename, std::fstream::app);
   }
-  else {
-    error_file.open(f);
+  else{
+    error_file.open(filename);
   }
 
-  //std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-  //time_t t = std::chrono::system_clock::to_time_t(now);
-  //error_file << ctime(&t) << ": ";
 
+  char s[1000];
+  time_t t = time(NULL);
+  struct tm * p = localtime(&t);
+  strftime(s, 1000, "%B %d, %H:%M:%S", p);
+  std::string a = s;
   if(!error_file){
-    std::cout << "Error: " << f << " failed to open." << std::endl;
+    std::cout << "Error: " << filename << " failed to open.\n";
     return;
   }
 
-  std::string s;
-  if(tabs > 0){
-    for(int i = 0; i < tabs; i++){
-      s += '\t';
-    }
-    msg = s + msg;
-  }
-  error_file << msg << std::endl;
+  msg = a + " " + msg + "\n";
+  error_file << msg;
   error_file.close();
 }

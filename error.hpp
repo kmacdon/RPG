@@ -1,3 +1,3 @@
 #include <string>
 
-void print_log(std::string f, std::string msg, int tabs = 0, bool append = true);
+void print_log(std::string filename, std::string msg, bool append = true);

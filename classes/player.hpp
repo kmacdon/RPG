@@ -30,11 +30,11 @@ public:
   void add_exp(WINDOW * win, int e);
   //Item Functionss
   void add_item(WINDOW * win, Item d);
-  void use_item(Item *a, WINDOW * win);
+  void use_item(WINDOW * win, Item *a);
   Item* get_item(WINDOW * win, std::string);
   void remove_item(std::string s);
-  void battle(Enemy &E, WINDOW * win);
-  void print_inventory(WINDOW * win);
+  void battle(Enemy &E, WINDOW * win, WINDOW * stats);
+  void print_inventory(WINDOW * win, WINDOW * stats);
 
   //Setters
   void set_name(std::string n) {name = n;};

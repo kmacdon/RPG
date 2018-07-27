@@ -1,6 +1,9 @@
 #include "player.hpp"
 #include "../functions.hpp"
 #include "../error.hpp"
+#include <fstream>
+#include "../data/constants.hpp"
+#include "../screen.hpp"
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////
@@ -74,27 +77,27 @@ void Player::add_exp(WINDOW * win, int e){
       std::string s = "You leveled up! Now at level " + std::to_string(level);
       waddstr(win, s.c_str());
     }
-    s = std::to_string(next_level - experience) + " experience until the next level";
+    s = std::to_string(next_level - experience) + " experience until the next level.\n";
     waddstr(win, s.c_str());
 }
 
 //Print out inventory
-void Player::print_inventory(WINDOW * win){
-  const std::string log_file = "log.txt";
-  print_log(log_file, "Opening inventory screen", 0, false);
+void Player::print_inventory(WINDOW * win, WINDOW * stats){
+  print_log(MAIN_LOG, "Opening inventory screen");
+
   char a = 'a';
-  initscr();
   cbreak();
   noecho();
-  keypad(win, TRUE);
-  //WINDOW * main = newwin(40, 40, 0, 0);
 
-
-  int x = 0;
-  int y = 0;
   //Display inventory screen and get selections
   while(1){
-    print_log(log_file, "Entering Loop", 1);
+    //refresh stats screen
+    print_stats(stats);
+    wrefresh(stats);
+
+    int y = 0;
+    wclear(win);
+    wrefresh(win);
     int ch;
     wmove(win, 0, 0);
     if(inventory.size() == 0){
@@ -108,104 +111,62 @@ void Player::print_inventory(WINDOW * win){
       break;
     }
 
-    //create inventory screen
-    int breaks[inventory.size()];
-    std::string a = "Inventory size: " + std::to_string(inventory.size());
-    print_log(log_file, a, 1);
+    //create vector of possible choices
+    std::vector<std::string> v;
     for(int i = 0; i < inventory.size(); i++){
-      waddstr(win, inventory[i].get_name().c_str());
-      waddch(win, '\n');
-      wmove(win, i + 1, 0);
-      breaks[i] = inventory[i].get_name().length();
-      a = "Break " + std::to_string(i) + ": " + std::to_string(breaks[i]);
-      print_log(log_file, a, 2);
-      a = "Placing " + inventory[i].get_name() + " at position " + std::to_string(i) + ",0";
-      print_log(log_file, a, 2);
+      std::string s = inventory[i].get_name() + " " + std::to_string(inventory[i].get_stat());
+      v.push_back(s);
     }
-    if(y >= inventory.size()){
-      print_log(log_file, "y > i", 2);
-      y = 0;
-    }
-    wmove(win, y, 0);
-
-    print_log(log_file, "Inventory Printed", 2);
-    a = "Current x = " + std::to_string(x);
-    print_log(log_file, a, 2);
-    a = "Current y = " + std::to_string(y);
-    print_log(log_file, a, 2);
-
-    wrefresh(win);
-    //wmove(win, y, breaks[x]);
-    ch = mvwgetch(win, y, breaks[x]);
-
-    Item *I = nullptr;
-    //Get input
-    std::string v;
-
-    //key selection
-    switch (ch){
-      case KEY_UP:
-        print_log(log_file, "Input up", 3);
-        y--;
-        if(y <= 0)
-          y = 0;
-        v = "y = " + std::to_string(y);
-        print_log(log_file, v, 3);
-        wmove(win, y, breaks[y]);
-        break;
-      case KEY_DOWN:
-        print_log(log_file, "Input down", 3);
-        y++;
-        if(y >= inventory.size())
-          y = inventory.size() - 1;
-        v = "y = " + std::to_string(y);
-        print_log(log_file, v, 3);
-        wmove(win, y, breaks[y]);
-        break;
-      //selection made
-      case '\n':
-          I = &inventory[y];
-          v = "Selected " + I->get_name();
-          print_log(log_file, v, 3);
-        break;
-      default:
-        break;
-    }
-    if(I){
-      wmove(win, 0, 20);
-      use_item(I, win);
-      wrefresh(win);
-    }
-    else if(ch == 'q'){
+    //selection screen
+    std::string choice = select(win, v, y, true);
+    print_log(MAIN_LOG, "Choice = " + choice);
+    if(choice == "q")
       break;
+    v = split(choice, ' ');
+    for(int j = 1; j < v.size() - 1; j++){
+      v[0] += " " + v[j];
     }
-    wrefresh(win);
-    wclear(win);
+    //match choice to inventory
+    for(int i = 0; i < inventory.size(); i++){
+      if(v[0] == inventory[i].get_name()){
+        print_log(MAIN_LOG, "Choice matched");
+        wmove(win, 0, 20); // used for printing message
+        use_item(win, &inventory[i]);
+        wrefresh(win);
+        ch = wgetch(win); // just so player can read message
+      }
+    }
   }
   echo();
   nocbreak();
-  endwin();
 }
 
 Item* Player::get_item(WINDOW * win, std::string s){
+  print_log(MAIN_LOG, "Entering get_item()");
   for(int i = 0; i < inventory.size(); i++){
     std::string n = inventory[i].get_name();
     std::transform(n.begin(), n.end(), n.begin(), ::tolower);
     if(n == s){
+      print_log(MAIN_LOG, "Exiting get_item()");
       return &inventory[i];
     }
   }
   waddstr(win, "Sorry. That item is not in your inventory");
+  print_log(MAIN_LOG, "Exiting get_item() without finding item");
   return nullptr;
 }
 
-void Player::use_item(Item *a, WINDOW * win){
+void Player::use_item(WINDOW * win, Item *a){
+  print_log(MAIN_LOG, "Entering use_item()");
   //empty pointer
   if(!a){
     return;
   }
   int s = a->get_stat();
   Item I;
+  print_log(MAIN_LOG, "Using item = " + a->get_name());
+
+  //match item type
   switch(a->get_type()){
     case Potion:
       if(health == max_health){
@@ -229,12 +190,12 @@ void Player::use_item(Item *a, WINDOW * win){
     default:
       break;
   }
-  std::string m = "Using item " + a->get_name();
-  waddstr(win, m.c_str());
   wrefresh(win);
+  print_log(MAIN_LOG, "Exiting use_item()");
 }
 
 void Player::add_item(WINDOW * win, Item d){
+  print_log(MAIN_LOG, "Entering add_item()");
   for(int i = 0; i < inventory.size(); i++){
     if(inventory[i].get_name() == d.get_name()){
       quantity[i]++;
@@ -243,9 +204,11 @@ void Player::add_item(WINDOW * win, Item d){
   }
   inventory.push_back(d);
   quantity.push_back(1);
+  print_log(MAIN_LOG, "Exiting add_item()");
 }
 
 void Player::remove_item(std::string s){
+  print_log(MAIN_LOG, "Entering remove_item()");
   for(int i = 0; i < inventory.size(); i++){
     if(inventory[i].get_name() ==  s){
       quantity[i]--;
@@ -256,64 +219,45 @@ void Player::remove_item(std::string s){
       break;
     }
   }
+  print_log(MAIN_LOG, "Exiting remove_item()");
 }
 
-void Player::battle(Enemy &E, WINDOW * win){
+void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
+  print_log(MAIN_LOG, "Entering battle()");
   wclear(win);
   std::string s;
   s = "You are attacked by " + E.get_description() + "\n";
   waddstr(win, s.c_str());
-  char ch;
+  unsigned char ch;
   int x = 0;
   int y = 0;
+  wmove(win, ++y, x);
+  std::vector<std::string> v;
+  v.push_back("Attack");
+  v.push_back("Use Item");
   while(is_alive() && E.is_alive()){
-    waddstr(win, "What would you like to do?");
-    std::string s;
-    while(1){
-      ch = wgetch(win);
-      //wmove(main, y, ++x);
-      if(ch == '\n'){
-        x = 0;
-        waddch(win, ch);
-        wmove(win, ++y, x);
-        break;
+    std::string choice = select(win, v, y, false);
+    //selection made
+      y++;
+      if(choice == "Attack"){
+        print_log(BATTLE_LOG, "Selected Attack");
+        if(get_speed() >= E.get_speed()){
+          defend(win, E.attack(win));
+          E.defend(win, attack(win));
+        }
+        else {
+          E.defend(win, attack(win));
+          defend(win, E.attack(win));
+        }
       }
-      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
-        ch = '\b';
-        waddch(win, ch);
-        return;
-      }
-      //waddch(main, ch);
-      s.push_back(ch);
-    }
-    if(s == "Use Item"){
-      waddstr(win, "Which item would you like to use?\n");
-      print_inventory(win);
-      std::string c;
-      std::getline(std::cin, c);
-      Item *I = get_item(win, c);
-      //nullprt if no item c in inventory
-      if(!I){
-        continue;
-      }
-      use_item(I, win);
-      defend(win, E.attack(win));
-    }
-    else if (s == "attack"){
-      if(get_speed() >= E.get_speed()){
-        E.defend(win, attack(win));
+      else if(choice == "Use Item"){
+        wclear(win);
+        wrefresh(win);
+        print_inventory(win, stats);
+        wclear(win);
+        wrefresh(win);
         defend(win, E.attack(win));
       }
-      else{
-        defend(win, E.attack(win));
-        E.defend(win, attack(win));
-      }
-    }
-    else {
-      waddstr(win, "Not a valid option");
-      continue;
-    }
-
   }
 
   //Player is dead
@@ -324,5 +268,9 @@ void Player::battle(Enemy &E, WINDOW * win){
 
   if(E.drop_loot())
     add_item(win, E.get_loot());
+  wrefresh(win);
+  char pause = wgetch(win);
+  print_log(MAIN_LOG, "Exiting battle()");
+  wclear(win);
   wrefresh(win);
 }

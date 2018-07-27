@@ -1,0 +1,27 @@
+July 26, 22:06:56 Entering initialize()
+July 26, 22:06:56 data/default.json
+July 26, 22:06:56 Entering load_data()
+July 26, 22:06:56 Exiting load_data()
+July 26, 22:06:56 Entering create_map()
+July 26, 22:06:56 P_Location
+July 26, 22:06:56 Mapping
+July 26, 22:06:56 Mapping
+July 26, 22:06:56 Mapping
+July 26, 22:06:56 END
+July 26, 22:06:56 Exiting initialize()
+July 26, 22:06:56 Entering main_screen()
+July 26, 22:06:56 Entering select()
+July 26, 22:07:05 Selection made
+July 26, 22:07:05 Entering get_line()
+July 26, 22:07:06 Exiting get_line()
+July 26, 22:07:07 Entering get_line()
+July 26, 22:07:14 Exiting get_line()
+July 26, 22:07:14 Opening inventory screen
+July 26, 22:07:14 Entering select()
+July 26, 22:07:22 Choice = q
+July 26, 22:07:22 Entering get_line()
+July 26, 22:07:28 Exiting get_line()
+July 26, 22:07:28 Entering dungeon Forest Grove
+July 26, 22:07:28 Entering explore() 
+July 26, 22:07:28 Entering battle()
+July 26, 22:07:28 Entering select()
