@@ -1,1 +1,12 @@
-Welcome to Game_Name!
+                  .____                   __
+                  |    |    ____  _______/  |_
+                  |    |   /  _ \/  ___/\   __\
+                  |    |__(  <_> )___ \  |  |
+                  |_______ \____/____  > |__|
+                          \/         \/
+
+Welcome to Lost, a simple game by Kevin MacDonald. This is a
+generic RPG game that I created for fun. The game is text
+based with some screens utilizing the arrow keys to select
+options. Type 'help' on the main screen to bring up a list
+of commands. Enjoy

@@ -1,6 +1,7 @@
 #include "screen.hpp"
 #include "error.hpp"
 #include "data/constants.hpp"
+#include <ctype.h>
 //Used to select input with arrow keys
 std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool vertical){
   print_log(MAIN_LOG, "Entering select()");
@@ -90,13 +91,15 @@ std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool 
 
 std::string get_line(WINDOW * win, int &y){
   print_log(MAIN_LOG, "Entering get_line()");
+  keypad(win, FALSE);
   char ch;
   std::string s;
 
   //get input
   while(1){
     ch = wgetch(win);
-    if(ch == '\n'){
+
+    if(ch == '\n' && s.size() != 0){
       waddch(win, ch);
       wmove(win, ++y, 0);
       break;
@@ -106,8 +109,10 @@ std::string get_line(WINDOW * win, int &y){
       waddch(win, ch);
     }
     //waddch(win, ch);
-    s.push_back(ch);
+    if(isalnum(ch) || isspace(ch))
+      s.push_back(ch);
   }
+  keypad(win, TRUE);
   print_log(MAIN_LOG, "Exiting get_line()");
   return s;
 }

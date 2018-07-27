@@ -15,7 +15,7 @@ private:
   std::string description;
 
 public:
-  void explore(WINDOW * win, Player &P);
+  void explore(WINDOW * win, WINDOW * stats, Player &P);
   std::string get_name(){return name;};
   friend void to_json(nlohmann::json& j, const Dungeon& D);
   friend void from_json(const nlohmann::json& j, Dungeon& D);

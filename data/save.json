@@ -1,5 +1,5 @@
-{"encounter_rate":0.30000001192092896,"enemies":["orc","wolf"],"name":"Misty Mountains","object":"Location"}
-{"encounter_rate":0.30000001192092896,"enemies":["orc","goblin"],"name":"Moria","object":"Location"}
-{"encounter_rate":0.30000001192092896,"enemies":["goblin","wolf"],"name":"Lothlorien","object":"Location"}
-{"armor":{"name":"Cloth Armor","object":"Item","stat":2,"type":1},"experience":0,"health":5,"inventory":[{"name":"Health Potion","object":"Item","stat":3,"type":2},{"name":"Small Potion","object":"Item","stat":1,"type":2}],"level":1,"max_health":10,"name":"Kevin","next_level":100,"object":"Player","quantity":[1,1],"weapon":{"name":"Bronze Sword","object":"Item","stat":5,"type":0}}
+{"encounter_rate":0.30000001192092896,"enemies":["orc","goblin"],"name":"Small Foothills","object":"Location","poi":["Abandoned House"]}
+{"encounter_rate":0.30000001192092896,"enemies":["orc","wolf"],"name":"Desolate Plain","object":"Location","poi":["Forest Grove"]}
+{"encounter_rate":0.30000001192092896,"enemies":["bear","wolf"],"name":"Dense Forest","object":"Location","poi":[]}
+{"armor":{"name":"Cloth Armor","object":"Item","stat":2,"type":1},"experience":0,"health":10,"inventory":[{"name":"Health Potion","object":"Item","stat":3,"type":2},{"name":"Small Potion","object":"Item","stat":1,"type":2}],"level":1,"max_health":10,"name":"Kevin","next_level":100,"object":"Player","quantity":[1,1],"weapon":{"name":"Bronze Sword","object":"Item","stat":5,"type":0}}
 {"object":"END"}

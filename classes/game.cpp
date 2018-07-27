@@ -31,9 +31,11 @@ void Game::initialize(){
   else{
     filename = DEFAULT_FILE;
   }
+  print_log(MAIN_LOG, filename);
   load_data(filename);
   create_map();
-  print_log(MAIN_LOG, "Exiting initialize()", false);
+  reload = false;
+  print_log(MAIN_LOG, "Exiting initialize()");
 }
 
 //load data from file
@@ -71,43 +73,41 @@ void Game::welcome_screen(WINDOW * win){
   std::ifstream input("data/welcome.txt");
   while(std::getline(input, s)){
     waddstr(win, s.c_str());
+    wmove(win, ++y, 0);
   }
+  wmove(win, y, 0);
   input.close();
-
+  std::vector<std::string> v;
+  v.push_back("New Game");
+  v.push_back("Reload");
+  while(1){
+    std::string choice = select(win, v, y, false);
+    if(choice == "New Game")
+      break;
+    else{
+      reload = true;
+      break;
+    }
+  }
   //Player info
   //get input
   s.clear();
-  wmove(win, ++y, 0);
-  waddstr(win, "What is your name?\n");
-  wmove(win, ++y, 0);
-
-  int ch;
-  while(1){
+  if(!reload){
+    wmove(win, ++y, 0);
+    waddstr(win, "What is your name?\n");
+    wmove(win, ++y, 0);
     while(1){
-      ch = wgetch(win);
-      //wmove(win, y, ++x);
-      if(ch == '\n'){
-        waddch(win, ch);
-        wmove(win, ++y, 0);
+      s = get_line(win, y);
+      if(s != "NULL" && s.length() < NAME_LENGTH){
         break;
       }
-      else if((int)ch == KEY_BACKSPACE || (int)ch == KEY_DC){
-        ch = '\b';
-        waddch(win, ch);
-        return;
-      }
-      //waddch(win, ch);
-      s.push_back(ch);
+      waddstr(win, "Sorry, that is not a valid name.");
+      wmove(win, ++y, 0);
     }
-    if(s != "NULL" && s.length() < NAME_LENGTH){
-      break;
-    }
-    waddstr(win, "Sorry, that is not a valid name.");
-    wmove(win, ++y, 0);
+    P.set_name(s);
+    s = "Welcome " + s;
+    waddstr(win, s.c_str());
   }
-  P.set_name(s);
-  s = "Welcome " + s;
-  waddstr(win, s.c_str());
   wmove(win, ++y, 0);
 }
 
@@ -117,7 +117,7 @@ void Game::main_screen(){
   WINDOW * main = newwin(20, 60, 0, 0);
   WINDOW * info = newwin(8, 19, 0, 60);
   WINDOW * map = newwin(6, 19, 8, 60);
-  WINDOW * poi = newwin(8, 19, 16, 60);
+  WINDOW * poi = newwin(8, 19, 14, 60);
   keypad(main, TRUE);
   nocbreak();
   echo();
@@ -158,15 +158,14 @@ void Game::main_screen(){
     ++y;
     wmove(main, y, x);
     wrefresh(main);
-    print_log(MAIN_LOG, "Splitting get_line()");
     std::vector<std::string> v = split(get_line(main, y), ' ');
-    print_log(MAIN_LOG, "Split get_line()");
-    std::transform(v[0].begin(), v[0].end(), v[0].begin(), ::tolower);
-    print_log(MAIN_LOG, "Transform");
+    if(v[0].size() != 1){
+      std::transform(v[0].begin(), v[0].end(), v[0].begin(), ::tolower);
+    }
     //inventory management
     if(v[0] == "inventory"){
       wclear(main);
-      P.print_inventory(main);
+      P.print_inventory(main, info);
       wclear(main);
       y = 0;
     }
@@ -183,6 +182,9 @@ void Game::main_screen(){
           P.current = P.current->get_connection(c[i]);
           change = true;
           wrefresh(main);
+          //refresh dungeon
+          poi_screen(poi);
+          wrefresh(poi);
           break;
         }
         if(i == c.size() - 1  && !change){
@@ -195,7 +197,7 @@ void Game::main_screen(){
         if(P.current->random_encounter()){
           Enemy E = P.current->generate_enemy();
           wclear(main);
-          P.battle(E, main);
+          P.battle(E, main, info);
         }
         wclear(map);
         map_screen(map);
@@ -214,7 +216,7 @@ void Game::main_screen(){
           print_log(MAIN_LOG, "Entering dungeon " + D.get_name());
           wclear(main);
           wrefresh(main);
-          D.explore(main, P);
+          D.explore(main, info, P);
           print_log(MAIN_LOG, "Deleting dungeon " + D.get_name());
           P.current->poi.erase(P.current->poi.begin() + i);
           nocbreak();
@@ -279,9 +281,16 @@ void Game::poi_screen(WINDOW * win){
   wmove(win, 0, 0);
   std::vector<std::string> c = P.current->list_poi();
   std::string b;
+  int y = 1;
+  waddstr(win, "| POI:\n");
   for(int i = 0; i < c.size(); i++){
+    ++y;
     b = "| -" + c[i] + "\n";
     waddstr(win, b.c_str());
+  }
+  while(y < 7){
+    waddstr(win, "|");
+    wmove(win, ++y, 0);
   }
   waddstr(win, "|__________________\n");
 }
@@ -292,9 +301,15 @@ void Game::map_screen(WINDOW * win){
   std::string b = "| Current: \n| -" + P.current->get_name() + "\n";
   waddstr(win, b.c_str());
   waddstr(win, "| Connections: \n");
+  int y = 2;
   for(int i = 0; i < c.size(); i++){
+    y++;
     b = "| -" + c[i] + "\n";
     waddstr(win, b.c_str());
+  }
+  while(y < 5){
+    waddstr(win, "|");
+    wmove(win, ++y, 0);
   }
   waddstr(win, "|__________________\n");
 }

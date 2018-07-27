@@ -82,7 +82,7 @@ void Player::add_exp(WINDOW * win, int e){
 }
 
 //Print out inventory
-void Player::print_inventory(WINDOW * win){
+void Player::print_inventory(WINDOW * win, WINDOW * stats){
   print_log(MAIN_LOG, "Opening inventory screen");
 
   char a = 'a';
@@ -91,6 +91,10 @@ void Player::print_inventory(WINDOW * win){
 
   //Display inventory screen and get selections
   while(1){
+    //refresh stats screen
+    print_stats(stats);
+    wrefresh(stats);
+
     int y = 0;
     wclear(win);
     wrefresh(win);
@@ -218,7 +222,7 @@ void Player::remove_item(std::string s){
   print_log(MAIN_LOG, "Exiting remove_item()");
 }
 
-void Player::battle(Enemy &E, WINDOW * win){
+void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
   print_log(MAIN_LOG, "Entering battle()");
   wclear(win);
   std::string s;
@@ -249,7 +253,7 @@ void Player::battle(Enemy &E, WINDOW * win){
       else if(choice == "Use Item"){
         wclear(win);
         wrefresh(win);
-        print_inventory(win);
+        print_inventory(win, stats);
         wclear(win);
         wrefresh(win);
         defend(win, E.attack(win));
@@ -265,5 +269,8 @@ void Player::battle(Enemy &E, WINDOW * win){
   if(E.drop_loot())
     add_item(win, E.get_loot());
   wrefresh(win);
+  char pause = wgetch(win);
   print_log(MAIN_LOG, "Exiting battle()");
+  wclear(win);
+  wrefresh(win);
 }
