@@ -1,13 +1,39 @@
-July 26, 22:15:50 Entering initialize()
-July 26, 22:15:50 data/default.json
-July 26, 22:15:50 Entering load_data()
-July 26, 22:15:50 Exiting load_data()
-July 26, 22:15:50 Entering create_map()
-July 26, 22:15:50 P_Location
-July 26, 22:15:50 Mapping
-July 26, 22:15:50 Mapping
-July 26, 22:15:50 Mapping
-July 26, 22:15:50 END
-July 26, 22:15:50 Exiting initialize()
-July 26, 22:15:50 Entering main_screen()
-July 26, 22:15:50 Entering select()
+July 31, 19:23:21 Entering initialize()
+July 31, 19:23:21 data/default.json
+July 31, 19:23:21 Entering load_data()
+July 31, 19:23:21 Exiting load_data()
+July 31, 19:23:21 Entering create_map()
+July 31, 19:23:21 P_Location
+July 31, 19:23:21 Mapping
+July 31, 19:23:21 Mapping
+July 31, 19:23:21 Mapping
+July 31, 19:23:21 END
+July 31, 19:23:21 Exiting initialize()
+July 31, 19:23:21 Entering main_screen()
+July 31, 19:23:21 Entering select()
+July 31, 19:23:22 Selection made
+July 31, 19:23:22 Entering get_line()
+July 31, 19:23:24 Exiting get_line()
+July 31, 19:23:24 Entering get_line()
+July 31, 19:23:29 Exiting get_line()
+July 31, 19:23:29 Moving from Desolate Plain to Small Foothills
+July 31, 19:23:29 Entering get_line()
+July 31, 19:23:35 Exiting get_line()
+July 31, 19:23:35 Moving from Small Foothills to Desolate Plain
+July 31, 19:23:35 Entering get_line()
+July 31, 19:23:40 Exiting get_line()
+July 31, 19:23:40 Moving from Desolate Plain to Small Foothills
+July 31, 19:23:40 Entering get_line()
+July 31, 19:23:44 Exiting get_line()
+July 31, 19:23:44 Moving from Small Foothills to Desolate Plain
+July 31, 19:23:44 Entering get_line()
+July 31, 19:23:51 Exiting get_line()
+July 31, 19:23:51 Entering get_line()
+July 31, 19:23:53 Exiting get_line()
+July 31, 19:23:53 Entering get_line()
+July 31, 19:24:30 Exiting get_line()
+July 31, 19:24:30 Entering get_line()
+July 31, 19:25:57 Exiting get_line()
+July 31, 19:25:57 Entering get_line()
+July 31, 19:26:24 Exiting get_line()
+July 31, 19:26:24 Exiting main_screen()

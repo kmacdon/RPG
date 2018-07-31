@@ -1,12 +1,15 @@
   Press q during inventory screen to quit
 
   commands:
-  equip <item> : Used on the inventory screen to equip or use an item
-  explore <POI> : Explore the selected POI
-  inventory : Open up inventory screen to see or use items
+  equip <item>    : Used on the inventory screen to
+                    equip or use an item
+  explore <POI>   : Explore the selected POI
+  inventory       : Open up inventory screen to see
+                    or use items
   move <Location> : Move to selected Location
-  quit : Quit the game, note you will not be prompted to save before!
-  reload : Reload your last save game
-  save : Save the game
-  whereami : Display current location
-  whoami : Display your name
+  quit            : Quit the game, note you will not
+                    be prompted to save before!
+  reload          :  Reload your last save game
+  save            : Save the game
+  whereami        : Display current location
+  whoami          : Display your name
