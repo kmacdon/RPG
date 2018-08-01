@@ -18,7 +18,7 @@ class Player: public Character{
 public:
   //Constructors
   Player();
-  Player(std::string n, int h, int mh, int s[4], Item w, Item a, int next_level);
+  Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a, int next_level);
   ~Player() {};
 
   //Methods

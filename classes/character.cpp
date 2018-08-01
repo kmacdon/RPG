@@ -11,18 +11,17 @@ Character::Character(){
   name = "NULL";
   health = 1;
   max_health = 1;
-  int s[4] = {1, 1, 1, 1};
-  assign(skills, s, 4);
+  skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
   weapon = Item("rusty axe", Weapon, 2);
   armor = Item("rusty mail", Armor, 2);
   alive = true;
 }
 
-Character::Character(std::string n, int h, int mh, int s[4], int e, Item w, Item a){
+Character::Character(std::string n, int h, int mh, std::vector <int> s, int e, Item w, Item a){
     name = n;
     health = h;
     max_health = mh;
-    assign(skills, s, 4);
+    skills = s;
     experience = e;
     weapon = w;
     armor = a;

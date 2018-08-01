@@ -7,8 +7,7 @@
 
 Enemy::Enemy(){
   name = "enemy";
-  int s[4] = {1, 1, 1, 1};
-  assign(skills, s, 4);
+  skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
   weapon = Item("hand", Weapon, 1);
   armor = Item("clothes", Armor, 1);
   loot = Item("coins", Money, 1);
@@ -19,8 +18,7 @@ Enemy::Enemy(){
 Enemy::Enemy(std::string n){
   name = n;
   if(n == "wolf"){
-    int s[4] = {2, 2, 3, 1};
-    assign(skills, s, 4);
+    skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
     weapon = Item("claws", Weapon, 2);
     armor = Item("fur", Armor, 2);
     loot = Item("coin", Money, 1);
@@ -29,8 +27,7 @@ Enemy::Enemy(std::string n){
     loot_rate = .05;
   }
   else if(n == "bear"){
-    int s[4] = {2, 2, 3, 1};
-    assign(skills, s, 4);
+    skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
     weapon = Item("claws", Weapon, 4);
     armor = Item("fur", Armor, 4);
     loot = Item("coin", Money, 1);
@@ -39,8 +36,7 @@ Enemy::Enemy(std::string n){
     loot_rate = .05;
   }
   else if(n == "goblin"){
-    int s[4] = {2, 2, 3, 1};
-    assign(skills, s, 4);
+    skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
     weapon = Item("dagger", Weapon, 2);
     armor = Item("rusty mail", Armor, 2);
     loot = Item("coin", Money, 1);
@@ -49,8 +45,7 @@ Enemy::Enemy(std::string n){
     loot_rate = .05;
   }
   else if(n == "orc"){
-    int s[4] = {2, 2, 3, 1};
-    assign(skills, s, 4);
+    skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
     weapon = Item("broadsword", Weapon, 2);
     armor = Item("heavy mail", Armor, 2);
     loot = Item("coin", Money, 1);
@@ -63,8 +58,8 @@ Enemy::Enemy(std::string n){
   }
 }
 
-Enemy::Enemy(std::string n, int s[4]){
-  assign(skills, s, 4);
+Enemy::Enemy(std::string n, std::vector <int> s){
+  skills = s;
   weapon = Item("claws", Weapon, 2);
   armor = Item("fur", Armor, 2);
   loot = Item("coin", Money, 1);
@@ -73,11 +68,11 @@ Enemy::Enemy(std::string n, int s[4]){
   loot_rate = .05;
 }
 
-Enemy::Enemy(std::string n, int h, int mh, int s[4], int e, Item w, Item a, Item l, float lr, std::string d){
+Enemy::Enemy(std::string n, int h, int mh, std::vector <int> s, int e, Item w, Item a, Item l, float lr, std::string d){
   name = n;
   health = h;
   max_health = mh;
-  assign(skills, s, 4);
+  skills = s;
   weapon = w;
   experience = e;
   armor = a;

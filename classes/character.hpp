@@ -1,5 +1,6 @@
 #include "item.hpp"
 #include <ncurses.h>
+#include <vector>
 #pragma once
 
 class Character{
@@ -7,7 +8,7 @@ protected:
   //Members
   int health;
   int max_health;
-  int skills[4]; // Strength, Endurance, Speed, Luck
+  std::vector <int> skills; // Strength, Endurance, Speed, Luck
   int experience;
   Item weapon;
   Item armor;
@@ -17,7 +18,7 @@ protected:
 public:
   //Constructors
   Character();
-  Character(std::string n, int h, int mh, int s[4], int e, Item w, Item a);
+  Character(std::string n, int h, int mh, std::vector <int> s, int e, Item w, Item a);
   ~Character();
 
   //Methods

@@ -4,6 +4,7 @@ class Item;
 class Location;
 class Player;
 class Dungeon;
+class Enemy;
 
 using nlohmann::json;
 
@@ -18,3 +19,6 @@ void from_json(const nlohmann::json& j, Player& P);
 
 void to_json(nlohmann::json& j, const Dungeon& D);
 void from_json(const nlohmann::json& j, Dungeon& D);
+
+void to_json(nlohmann::json& j, const Enemy& E);
+void from_json(const nlohmann::json& j, Enemy& E);

@@ -33,7 +33,7 @@ public:
   std::vector<std::string> list_poi() {return poi;};
 
   bool random_encounter();
-  Enemy generate_enemy();
+  std::string generate_enemy();
 
   //Getters
   std::string get_name() {return name;};

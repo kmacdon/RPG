@@ -12,11 +12,11 @@ Player::Player(){
   name = "NULL";
 }
 
-Player::Player(std::string n, int h, int mh, int s[4], Item w, Item a, int next_level){
+Player::Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a, int next_level){
   name = n;
   health = h;
   max_health = mh;
-  assign(skills, s, 4);
+  skills = s;
   weapon = w;
   armor = a;
   alive = true;

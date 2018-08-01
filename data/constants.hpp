@@ -10,3 +10,4 @@ const std::string DUNGEON_FILE = "data/dungeons.json";
 const std::string BATTLE_LOG = "logs/battle_log.txt";
 const std::string ERROR_LOG = "logs/battle_log.txt";
 const std::string HELP_FILE = "data/help.txt";
+const std::string ENEMY_FILE = "data/enemies.json";

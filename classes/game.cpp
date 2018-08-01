@@ -19,6 +19,28 @@ Game::Game() :play_game(true), reload(false){
 //////////////////////  Methods  /////////////////////////////
 //////////////////////////////////////////////////////////////
 
+//load enemy from file
+Enemy Game::load_enemy(std::string e){
+  print_log(MAIN_LOG, "Loading enemy " + e);
+  std::ifstream input(ENEMY_FILE);
+  nlohmann::json j;
+  while(input >> j){
+    if(object["object"] == "END"){
+      break;
+    }
+    print_log(MAIN_LOG, j["name"]);
+    if(j["name"] == e){
+      print_log(MAIN_LOG, "Loaded enemy " + e);
+      Enemy E = j;
+      return E;
+    }
+  }
+  std::string s = j["name"];
+  print_log(MAIN_LOG, "Error: Failed to load enemy " + s);
+  Enemy E;
+  return E;
+}
+
 //create game instance
 void Game::initialize(){
   print_log(MAIN_LOG, "Entering initialize()", false);
@@ -51,6 +73,7 @@ void Game::load_data(std::string s){
   //get input
   int i = 0;
   while(input >> object){
+    print_log(MAIN_LOG, object["object"]);
     if(object["object"] == "Location"){
       Location L = object;
       map.push_back(L);
@@ -61,6 +84,7 @@ void Game::load_data(std::string s){
     else if(object["object"] == "END"){
       break;
     }
+    print_log(MAIN_LOG, "Done loading object");
   }
   input.close();
   print_log(MAIN_LOG, "Exiting load_data()");
@@ -195,7 +219,7 @@ void Game::main_screen(){
       }
       if(change){
         if(P.current->random_encounter()){
-          Enemy E = P.current->generate_enemy();
+          Enemy E = load_enemy(P.current->generate_enemy());
           wclear(main);
           P.battle(E, main, info);
         }
@@ -216,7 +240,8 @@ void Game::main_screen(){
           print_log(MAIN_LOG, "Entering dungeon " + D.get_name());
           wclear(main);
           wrefresh(main);
-          D.explore(main, info, P);
+          Enemy E = load_enemy(D.get_enemy());
+          D.explore(main, info, P, E);
           print_log(MAIN_LOG, "Deleting dungeon " + D.get_name());
           P.current->poi.erase(P.current->poi.begin() + i);
           nocbreak();
@@ -244,7 +269,7 @@ void Game::main_screen(){
       play_game = false;
     }
 
-    //invisible commands
+    //help commands
     else if(v[0] == "whereami"){
       waddstr(main, P.current->get_name().c_str());
     }

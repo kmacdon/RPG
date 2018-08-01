@@ -1,5 +1,6 @@
 #include "character.hpp"
 #include "item.hpp"
+#include "json_conversion.hpp"
 
 #pragma once
 
@@ -14,8 +15,8 @@ public:
   //Constructors
   Enemy();
   Enemy(std::string n);
-  Enemy(std::string n, int s[4]);
-  Enemy(std::string n, int h, int mh, int s[4], int e, Item W, Item a, Item l, float lr, std::string d);
+  Enemy(std::string n, std::vector <int> s);
+  Enemy(std::string n, int h, int mh, std::vector <int> s, int e, Item W, Item a, Item l, float lr, std::string d);
   ~Enemy() {};
 
   //Methods
@@ -23,4 +24,6 @@ public:
   int drop_exp() {return experience;};
   std::string get_description() {return description;};
   bool drop_loot();
+  friend void to_json(nlohmann::json& j, const Enemy& E);
+  friend void from_json(const nlohmann::json& j, Enemy& E);
 };

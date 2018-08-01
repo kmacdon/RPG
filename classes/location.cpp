@@ -58,7 +58,7 @@ bool Location::random_encounter(){
   return (float)rand()/(float)(RAND_MAX) < encounter_rate;
 }
 
-Enemy Location::generate_enemy(){
+std::string Location::generate_enemy(){
   int r = rand() % enemies.size();
-  return Enemy(enemies[r]);
+  return enemies[r];
 }

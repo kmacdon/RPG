@@ -3,10 +3,9 @@
 #include "../data/constants.hpp"
 #include "../error.hpp"
 
-void Dungeon::explore(WINDOW * win, WINDOW * stats, Player &P){
+void Dungeon::explore(WINDOW * win, WINDOW * stats, Player &P, Enemy E){
   print_log(MAIN_LOG, "Entering explore() ");
   waddstr(win, description.c_str());
-  Enemy E(enemy);
   P.battle(E, win, stats);
   if(!P.is_alive())
     return;
