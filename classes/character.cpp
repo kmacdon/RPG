@@ -30,7 +30,11 @@ Character::Character(std::string n, int h, int mh, std::vector <int> s, int e, I
 
 Character::~Character(){}
 
-//maybe add random element to this and defend
+//////////////////////////////////////////////////////////////
+//////////////////////  Methods  /////////////////////////////
+//////////////////////////////////////////////////////////////
+
+//attack and defend
 int Character::attack(WINDOW * win){
   std::string s =  name + " attacks with " + weapon.get_name() + " and deals ";
   waddstr(win, s.c_str());
@@ -41,15 +45,11 @@ int Character::attack(WINDOW * win){
   return round((.8*skills[0] + weapon.get_stat() + a));
 }
 
-//////////////////////////////////////////////////////////////
-//////////////////////  Methods  /////////////////////////////
-//////////////////////////////////////////////////////////////
-
 void Character::defend(WINDOW * win, int a){
   int d = round(.7*skills[1] + armor.get_stat());
   d = (d > a) ? 1 : a - d;
   health -= d;
-  std::string s = std::to_string(d) + " points of damage!\n";
+  std::string s = std::to_string(d) + " points\nof damage!\n";
   waddstr(win, s.c_str());
   if(health <= 0){
     alive = false;

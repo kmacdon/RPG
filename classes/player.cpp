@@ -240,6 +240,7 @@ void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
     //selection made
       y++;
       if(choice == "Attack"){
+        y += 3;
         print_log(BATTLE_LOG, "Selected Attack");
         if(get_speed() >= E.get_speed()){
           defend(win, E.attack(win));

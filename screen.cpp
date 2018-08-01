@@ -8,6 +8,7 @@ std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool 
   cbreak();
   noecho();
   int x = 0;
+  wmove(win, y, x);
   int breaks[choices.size()];
   int y2 = y;
   int min = y;

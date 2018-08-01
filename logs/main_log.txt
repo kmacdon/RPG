@@ -1,44 +1,58 @@
-July 31, 20:26:07 Entering initialize()
-July 31, 20:26:07 data/default.json
-July 31, 20:26:07 Entering load_data()
-July 31, 20:26:07 Location
-July 31, 20:26:07 Done loading object
-July 31, 20:26:07 Location
-July 31, 20:26:07 Done loading object
-July 31, 20:26:07 Location
-July 31, 20:26:07 Done loading object
-July 31, 20:26:07 Player
-July 31, 20:26:07 Done loading object
-July 31, 20:26:07 END
-July 31, 20:26:07 Exiting load_data()
-July 31, 20:26:07 Entering create_map()
-July 31, 20:26:07 P_Location
-July 31, 20:26:07 Mapping
-July 31, 20:26:07 Mapping
-July 31, 20:26:07 Mapping
-July 31, 20:26:07 END
-July 31, 20:26:07 Exiting initialize()
-July 31, 20:26:07 Entering main_screen()
-July 31, 20:26:07 Entering select()
-July 31, 20:26:07 Selection made
-July 31, 20:26:07 Entering get_line()
-July 31, 20:26:09 Exiting get_line()
-July 31, 20:26:10 Entering get_line()
-July 31, 20:26:20 Exiting get_line()
-July 31, 20:26:20 Entering dungeon Forest Grove
-July 31, 20:26:20 Loading enemy wolf
-July 31, 20:26:20 wolf
-July 31, 20:26:20 Loaded enemy wolf
-July 31, 20:26:20 Entering explore() 
-July 31, 20:26:20 Entering battle()
-July 31, 20:26:20 Entering select()
-July 31, 20:26:20 Selection made
-July 31, 20:26:20 Entering select()
-July 31, 20:26:22 Selection made
-July 31, 20:26:23 Exiting battle()
-July 31, 20:26:23 Entering add_item()
-July 31, 20:26:23 Exiting explore() 
-July 31, 20:26:23 Deleting dungeon Forest Grove
-July 31, 20:26:23 Entering get_line()
-July 31, 20:26:26 Exiting get_line()
-July 31, 20:26:26 Exiting main_screen()
+July 31, 21:09:09 Entering initialize()
+July 31, 21:09:09 data/default.json
+July 31, 21:09:09 Entering load_data()
+July 31, 21:09:09 Location
+July 31, 21:09:09 Done loading object
+July 31, 21:09:09 Location
+July 31, 21:09:09 Done loading object
+July 31, 21:09:09 Location
+July 31, 21:09:09 Done loading object
+July 31, 21:09:09 Player
+July 31, 21:09:09 Done loading object
+July 31, 21:09:09 END
+July 31, 21:09:09 Exiting load_data()
+July 31, 21:09:09 Entering create_map()
+July 31, 21:09:09 P_Location
+July 31, 21:09:09 Mapping
+July 31, 21:09:09 Mapping
+July 31, 21:09:09 Mapping
+July 31, 21:09:09 END
+July 31, 21:09:09 Exiting initialize()
+July 31, 21:09:09 Entering main_screen()
+July 31, 21:09:09 Entering select()
+July 31, 21:09:10 Selection made
+July 31, 21:09:10 Entering get_line()
+July 31, 21:09:11 Exiting get_line()
+July 31, 21:09:14 Entering get_line()
+July 31, 21:09:35 Exiting get_line()
+July 31, 21:09:35 Entering dungeon Forest Grove
+July 31, 21:09:35 Loading enemy wolf
+July 31, 21:09:35 wolf
+July 31, 21:09:35 Loaded enemy wolf
+July 31, 21:09:35 Entering explore() 
+July 31, 21:09:35 Entering battle()
+July 31, 21:09:35 Entering select()
+July 31, 21:09:36 Selection made
+July 31, 21:09:36 Entering select()
+July 31, 21:09:37 Selection made
+July 31, 21:09:38 Exiting battle()
+July 31, 21:09:38 Entering add_item()
+July 31, 21:09:38 Exiting explore() 
+July 31, 21:09:38 Deleting dungeon Forest Grove
+July 31, 21:09:38 Entering get_line()
+July 31, 21:09:42 Exiting get_line()
+July 31, 21:09:42 Entering get_line()
+July 31, 21:09:44 Exiting get_line()
+July 31, 21:09:44 Entering get_line()
+July 31, 21:09:52 Exiting get_line()
+July 31, 21:09:52 Entering get_line()
+July 31, 21:09:53 Exiting get_line()
+July 31, 21:09:53 Entering get_line()
+July 31, 21:09:57 Exiting get_line()
+July 31, 21:09:57 Entering get_line()
+July 31, 21:09:58 Exiting get_line()
+July 31, 21:09:58 Entering get_line()
+July 31, 21:09:58 Exiting get_line()
+July 31, 21:09:58 Entering get_line()
+July 31, 21:10:44 Exiting get_line()
+July 31, 21:10:44 Exiting main_screen()

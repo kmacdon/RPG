@@ -25,7 +25,7 @@ Enemy Game::load_enemy(std::string e){
   std::ifstream input(ENEMY_FILE);
   nlohmann::json j;
   while(input >> j){
-    if(object["object"] == "END"){
+    if(j["object"] == "END"){
       break;
     }
     print_log(MAIN_LOG, j["name"]);
@@ -119,16 +119,15 @@ void Game::welcome_screen(WINDOW * win){
   if(!reload){
     wmove(win, ++y, 0);
     waddstr(win, "What is your name?\n");
-    wmove(win, ++y, 0);
     while(1){
       s = get_line(win, y);
       if(s != "NULL" && s.length() < NAME_LENGTH){
         break;
       }
-      waddstr(win, "Sorry, that is not a valid name.");
-      wmove(win, ++y, 0);
+      waddstr(win, "Sorry, that is not a valid name.\n");
     }
     P.set_name(s);
+    wmove(win, ++y, 0);
     s = "Welcome " + s;
     waddstr(win, s.c_str());
   }
@@ -160,7 +159,7 @@ void Game::main_screen(){
   wclear(main);
   map_screen(map);
   wrefresh(map);
-  scrollok(main, TRUE);
+  //scrollok(main, TRUE);
   while(P.is_alive() && play_game){
     if(y > 23){
       y = 0;
@@ -179,13 +178,12 @@ void Game::main_screen(){
     wmove(main, ++y, x);
     wrefresh(main);
     waddstr(main, "What would you like to do?\n");
-    ++y;
-    wmove(main, y, x);
     wrefresh(main);
     std::vector<std::string> v = split(get_line(main, y), ' ');
     if(v[0].size() != 1){
       std::transform(v[0].begin(), v[0].end(), v[0].begin(), ::tolower);
     }
+    wmove(main, ++y, x);
     //inventory management
     if(v[0] == "inventory"){
       wclear(main);
@@ -271,9 +269,11 @@ void Game::main_screen(){
 
     //help commands
     else if(v[0] == "whereami"){
-      waddstr(main, P.current->get_name().c_str());
+      std::string s = P.current->get_name() + "\n";
+      waddstr(main, s.c_str());
     }
     else if(v[0] == "whoami"){
+      std::string s = P.get_name() + "\n";
       waddstr(main, P.get_name().c_str());
     }
     else if(v[0] == "help"){
