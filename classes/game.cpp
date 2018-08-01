@@ -62,6 +62,7 @@ void Game::initialize(){
 
 //load data from file
 void Game::load_data(std::string s){
+  map.clear();
   print_log(MAIN_LOG, "Entering load_data()");
   std::ifstream input(s);
   if(!input){
@@ -132,31 +133,30 @@ void Game::welcome_screen(WINDOW * win){
     waddstr(win, s.c_str());
   }
   wmove(win, ++y, 0);
+  //start game
+  int ch = wgetch(win);
 }
 
 void Game::main_screen(){
   print_log(MAIN_LOG, "Entering main_screen()");
-  initscr();
   WINDOW * main = newwin(20, 60, 0, 0);
   WINDOW * info = newwin(8, 19, 0, 60);
   WINDOW * map = newwin(6, 19, 8, 60);
   WINDOW * poi = newwin(8, 19, 14, 60);
   keypad(main, TRUE);
-  nocbreak();
-  echo();
   int x = 0;
   int y = 0;
-
-  welcome_screen(main);
   wrefresh(main);
-  //start game
-  int ch = wgetch(main);
+
+  int ch;
 
   //refresh dungeon
+  wclear(poi);
   poi_screen(poi);
   wrefresh(poi);
   //Refresh map
   wclear(main);
+  wclear(map);
   map_screen(map);
   wrefresh(map);
   //scrollok(main, TRUE);
@@ -259,6 +259,12 @@ void Game::main_screen(){
     }
     //reload Save
     else if(v[0] == "reload"){
+      wclear(info);
+      wrefresh(info);
+      wclear(map);
+      wrefresh(map);
+      wclear(poi);
+      wrefresh(poi);
       play_game = false;
       reload = true;
     }
@@ -298,7 +304,7 @@ void Game::main_screen(){
     waddstr(main, "Reloading last save");
     wrefresh(main);
   }
-  endwin();
+
   print_log(MAIN_LOG, "Exiting main_screen()");
 }
 
@@ -405,14 +411,19 @@ void Game::play(){
 }
 
 void Game::start(){
+  initscr();
+  keypad(stdscr, TRUE);
+  nocbreak();
+  echo();
   //include option to reload
+  welcome_screen(stdscr);
   while(play_game){
     initialize();
     play();
     if(reload)
       play_game = true;
   }
-
+  endwin();
 }
 
 void Game::save(WINDOW * win){
