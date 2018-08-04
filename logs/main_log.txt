@@ -1,22 +1,50 @@
-July 31, 21:38:14 Entering initialize()
-July 31, 21:38:14 data/save.json
-July 31, 21:38:14 Entering load_data()
-July 31, 21:38:14 Location
-July 31, 21:38:14 Done loading object
-July 31, 21:38:14 Location
-July 31, 21:38:14 Done loading object
-July 31, 21:38:14 Location
-July 31, 21:38:14 Done loading object
-July 31, 21:38:14 Player
-July 31, 21:38:14 Done loading object
-July 31, 21:38:14 END
-July 31, 21:38:14 Exiting load_data()
-July 31, 21:38:14 Entering create_map()
-July 31, 21:38:14 P_Location
-July 31, 21:38:14 Mapping
-July 31, 21:38:14 Mapping
-July 31, 21:38:14 Mapping
-July 31, 21:38:14 END
-July 31, 21:38:14 Exiting initialize()
-July 31, 21:38:14 Entering main_screen()
-July 31, 21:38:14 Entering get_line()
+August 04, 13:34:17 Entering initialize()
+August 04, 13:34:17 data/default.json
+August 04, 13:34:17 Entering load_data()
+August 04, 13:34:17 Location
+August 04, 13:34:17 Done loading object
+August 04, 13:34:17 Location
+August 04, 13:34:17 Done loading object
+August 04, 13:34:17 Location
+August 04, 13:34:17 Done loading object
+August 04, 13:34:17 Player
+August 04, 13:34:17 Done loading object
+August 04, 13:34:17 END
+August 04, 13:34:17 Exiting load_data()
+August 04, 13:34:17 Entering create_map()
+August 04, 13:34:17 P_Location
+August 04, 13:34:17 Mapping
+August 04, 13:34:17 Mapping
+August 04, 13:34:17 Mapping
+August 04, 13:34:17 END
+August 04, 13:34:17 Exiting initialize()
+August 04, 13:34:17 Entering main_screen()
+August 04, 13:34:17 Entering get_line()
+August 04, 13:34:18 Exiting get_line()
+August 04, 13:34:18 Opening inventory screen
+August 04, 13:34:18 Entering select()
+August 04, 13:34:20 Selection made
+August 04, 13:34:20 Choice = Health Potion 3
+August 04, 13:34:20 Choice matched
+August 04, 13:34:20 Entering use_item()
+August 04, 13:34:20 Using item = Health Potion
+August 04, 13:34:20 Exiting use_item()
+August 04, 13:34:21 Entering select()
+August 04, 13:34:22 Selection made
+August 04, 13:34:22 Choice = Small Potion 1
+August 04, 13:34:22 Choice matched
+August 04, 13:34:22 Entering use_item()
+August 04, 13:34:22 Using item = Small Potion
+August 04, 13:34:22 Exiting use_item()
+August 04, 13:34:23 Entering select()
+August 04, 13:34:24 Selection made
+August 04, 13:34:24 Choice = Silver Sword 1
+August 04, 13:34:24 Choice matched
+August 04, 13:34:24 Entering use_item()
+August 04, 13:34:24 Using item = Silver Sword
+August 04, 13:34:24 Exiting use_item()
+August 04, 13:34:25 Entering select()
+August 04, 13:34:37 Choice = q
+August 04, 13:34:37 Entering get_line()
+August 04, 13:34:38 Exiting get_line()
+August 04, 13:34:38 Exiting main_screen()
