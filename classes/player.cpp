@@ -164,8 +164,9 @@ void Player::use_item(WINDOW * win, Item *a){
   }
   int s = a->get_stat();
   Item I;
-  print_log(MAIN_LOG, "Using item = " + a->get_name());
-
+  std::string name = a->get_name();
+  print_log(MAIN_LOG, "Using item = " + name);
+  std::string msg;
   //match item type
   switch(a->get_type()){
     case Potion:
@@ -174,10 +175,16 @@ void Player::use_item(WINDOW * win, Item *a){
         wrefresh(win);
         break;
       }
+      msg = "Using " + name;
+      waddstr(win, msg.c_str());
+      wrefresh(win);
       health = (health + s > max_health) ? max_health : health + s;
       remove_item(a->get_name());
       break;
     case Weapon:
+      msg = "Equipping " + name;
+      waddstr(win, msg.c_str());
+      wrefresh(win);
       I = weapon;
       weapon = *a;
       *a = I;

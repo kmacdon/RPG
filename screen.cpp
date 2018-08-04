@@ -45,14 +45,14 @@ std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool 
         break;
       case 5: //Right
         if(!vertical){
-          if(x < choices.size())
+          if(x < choices.size() - 1)
           x++;
           wmove(win, y, breaks[x]);
         }
         break;
       case 2: //Down
         if(vertical){
-          if(y < choices.size())
+          if(y < choices.size() - 1)
           y++;
           wmove(win, y, breaks[y-min]);
         }
@@ -72,10 +72,21 @@ std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool 
       case '\n':
         echo();
         nocbreak();
-        if(vertical)
-          selection = choices[y-min];
-        else
+        if(vertical){
+          y = y - min;
+          if(y < 0)
+            y = 0;
+          else if (y > choices.size() - 1)
+            y = choices.size() - 1;
+            selection = choices[y];
+        }
+        else{
+          if(x < 0)
+            x = 0;
+          else if (x > choices.size() - 1)
+            x = choices.size() - 1;
           selection = choices[x];
+        }
         wmove(win, ++y, 0);
         print_log(MAIN_LOG, "Selection made");
         return selection;
