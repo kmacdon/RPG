@@ -1,6 +1,8 @@
 a.out
 README.txt
-logs/*
+logs/main_log.txt
+logs/battle_log.txt
+logs*
 error.txt
 flowcharts/*
 project
