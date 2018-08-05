@@ -114,6 +114,7 @@ void Game::welcome_screen(WINDOW * win){
       break;
     }
   }
+  initialize();
   //Player info
   //get input
   s.clear();
@@ -418,10 +419,11 @@ void Game::start(){
   //include option to reload
   welcome_screen(stdscr);
   while(play_game){
-    initialize();
     play();
-    if(reload)
+    if(reload){
+      initialize();
       play_game = true;
+    }      
   }
   endwin();
 }

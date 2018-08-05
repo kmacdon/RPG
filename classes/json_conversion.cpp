@@ -47,7 +47,7 @@ void from_json(const nlohmann::json& j, Player& P) {
     P.inventory = j.at("inventory").get<std::vector<Item> >();
     P.quantity = j.at("quantity").get<std::vector<int> >();
     P.alive = j.at("alive").get<bool>();
-    P.skills = j.at("skills").get<std::vector<int> >();
+    P.skills = j.at("skills").get<std::unordered_map<std::string, int> >();
 }
 
 void to_json(nlohmann::json& j, const Dungeon& D) {
@@ -78,5 +78,5 @@ void from_json(const nlohmann::json& j, Enemy& E){
   E.loot = j.at("loot").get<Item>();
   E.loot_rate = j.at("loot_rate").get<float>();
   E.description = j.at("description").get<std::string>();
-  E.skills = j.at("skills").get<std::vector<int> >();
+  E.skills = j.at("skills").get<std::unordered_map<std::string, int> >();
 }

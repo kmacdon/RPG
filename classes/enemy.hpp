@@ -15,8 +15,8 @@ public:
   //Constructors
   Enemy();
   Enemy(std::string n);
-  Enemy(std::string n, std::vector <int> s);
-  Enemy(std::string n, int h, int mh, std::vector <int> s, int e, Item W, Item a, Item l, float lr, std::string d);
+  Enemy(std::string n, std::unordered_map <std::string, int> s);
+  Enemy(std::string n, int h, int mh, std::unordered_map <std::string, int> s, int e, Item W, Item a, Item l, float lr, std::string d);
   ~Enemy() {};
 
   //Methods

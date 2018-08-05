@@ -12,7 +12,7 @@ Player::Player(){
   name = "NULL";
 }
 
-Player::Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a, int next_level){
+Player::Player(std::string n, int h, int mh, std::unordered_map<std::string, int> s, Item w, Item a, int next_level){
   name = n;
   health = h;
   max_health = mh;
@@ -60,9 +60,9 @@ void Player::print_stats(WINDOW * win){
   waddstr(win, s.c_str());
   s = "| Experience: " + std::to_string(experience) + "\n| Next Level:" + std::to_string(next_level) + "\n";
   waddstr(win, s.c_str());
-  s = "| Str: " + std::to_string(skills[0]) + "  End: " + std::to_string(skills[1]) + "\n| Spd: " + std::to_string(skills[2]);
+  s = "| Str: " + std::to_string(skills["STR"]) + "  End: " + std::to_string(skills["END"]) + "\n| Spd: " + std::to_string(skills["SPD"]);
   waddstr(win, s.c_str());
-  s = "  Lck: " + std::to_string(skills[3]) + "\n";
+  s = "  Lck: " + std::to_string(skills["LCK"]) + "\n";
   waddstr(win, s.c_str());
   waddstr(win, "|__________________");
 }
