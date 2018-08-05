@@ -29,17 +29,9 @@ Player::Player(std::string n, int h, int mh, std::unordered_map<std::string, int
 //////////////////////  Methods  /////////////////////////////
 //////////////////////////////////////////////////////////////
 
-void Player::move(){
-  current->print_connections();
-  std::string s;
-  std::getline(std::cin, s);
-  std::vector<std::string> c = current->list_connections();
-  for(int i = 0; i < c.size(); i++){
-    if(c[i] == s){
-      current = current->get_connection(s);
-      return;
-    }
-  }
+void Player::move(WINDOW * win, WINDOW * stats, std::string s){
+  current->change_location(win, stats, this, s);
+
 }
 
 Location* Player::get_location(){
@@ -245,7 +237,7 @@ void Player::remove_item(std::string s){
   print_log(MAIN_LOG, "Exiting remove_item()");
 }
 
-void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
+void Player::battle(Enemy E, WINDOW * win, WINDOW * stats){
   print_log(MAIN_LOG, "Entering battle()");
   wclear(win);
   std::string s;

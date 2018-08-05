@@ -1,10 +1,12 @@
 #include <string>
 #include <vector>
 #include "json_conversion.hpp"
+#include <ncurses.h>
 
 class Enemy;
 
 #pragma once
+
 class Location{
 private:
   friend class Game;
@@ -13,11 +15,16 @@ private:
   std::vector<Location *> connections;
   float encounter_rate;
   std::vector<std::string> enemies; //save memory and reduce dependencies
-  std::string description;
   std::vector<std::string> poi;
-
+  //Methods
+  bool random_encounter();
+  Enemy generate_enemy();
+  std::vector<std::string> list_connections();
+  Location* get_connection(std::string s);
+  Enemy load_enemy(std::string s);
 protected:
   std::string name;
+  std::string description;
 
 public:
   //Constructors
@@ -26,14 +33,11 @@ public:
   ~Location() {};
 
   //Members
+  void change_location(WINDOW * win, WINDOW * stats, Player *P, std::string s);
   void add_connections(std::vector<Location *> c);
   void print_connections();
-  Location* get_connection(std::string s);
-  std::vector<std::string> list_connections();
-  std::vector<std::string> list_poi() {return poi;};
 
-  bool random_encounter();
-  std::string generate_enemy();
+  std::vector<std::string> list_poi() {return poi;};
 
   //Getters
   std::string get_name() {return name;};

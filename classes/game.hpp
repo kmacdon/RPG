@@ -20,7 +20,6 @@ private:
   //Methods
   void create_map();
   Dungeon generate_dungeon(std::string s);
-  Enemy load_enemy(std::string e);
 public:
   //Constructors
   Game();
