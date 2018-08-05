@@ -1,28 +1,40 @@
-August 05, 12:21:17 Entering initialize()
-August 05, 12:21:17 data/default.json
-August 05, 12:21:17 Entering load_data()
-August 05, 12:21:17 Location
-August 05, 12:21:17 Done loading object
-August 05, 12:21:17 Location
-August 05, 12:21:17 Done loading object
-August 05, 12:21:17 Location
-August 05, 12:21:17 Done loading object
-August 05, 12:21:17 Player
-August 05, 12:21:17 Done loading object
-August 05, 12:21:17 END
-August 05, 12:21:17 Exiting load_data()
-August 05, 12:21:17 Entering create_map()
-August 05, 12:21:17 P_Location
-August 05, 12:21:17 Mapping
-August 05, 12:21:17 Mapping
-August 05, 12:21:17 Mapping
-August 05, 12:21:17 END
-August 05, 12:21:17 Exiting initialize()
-August 05, 12:21:17 Entering get_line()
-August 05, 12:21:18 Exiting get_line()
-August 05, 12:21:19 Entering main_screen()
-August 05, 12:21:19 Entering get_line()
-August 05, 12:21:20 Exiting get_line()
-August 05, 12:21:20 Entering get_line()
-August 05, 12:21:22 Exiting get_line()
-August 05, 12:21:22 Exiting main_screen()
+August 05, 12:37:54 Entering initialize()
+August 05, 12:37:54 data/default.json
+August 05, 12:37:54 Entering load_data()
+August 05, 12:37:54 Location
+August 05, 12:37:54 Done loading object
+August 05, 12:37:54 Location
+August 05, 12:37:54 Done loading object
+August 05, 12:37:54 Location
+August 05, 12:37:54 Done loading object
+August 05, 12:37:54 Player
+August 05, 12:37:54 Done loading object
+August 05, 12:37:54 END
+August 05, 12:37:54 Exiting load_data()
+August 05, 12:37:54 Entering create_map()
+August 05, 12:37:54 P_Location
+August 05, 12:37:54 Mapping
+August 05, 12:37:54 Mapping
+August 05, 12:37:54 Mapping
+August 05, 12:37:54 END
+August 05, 12:37:54 Exiting initialize()
+August 05, 12:37:54 Entering get_line()
+August 05, 12:37:55 Exiting get_line()
+August 05, 12:37:55 Entering main_screen()
+August 05, 12:37:55 Entering get_line()
+August 05, 12:38:04 Exiting get_line()
+August 05, 12:38:04 Entering dungeon Forest Grove
+August 05, 12:38:04 Loading enemy wolf
+August 05, 12:38:04 wolf
+August 05, 12:38:04 Loaded enemy wolf
+August 05, 12:38:04 Entering explore() 
+August 05, 12:38:04 Entering battle()
+August 05, 12:38:04 Entering select()
+August 05, 12:38:05 Selection made
+August 05, 12:38:05 Entering select()
+August 05, 12:38:09 Selection made
+August 05, 12:38:12 Exiting battle()
+August 05, 12:38:12 Entering add_item()
+August 05, 12:38:12 Exiting explore() 
+August 05, 12:38:12 Deleting dungeon Forest Grove
+August 05, 12:38:12 Entering get_line()

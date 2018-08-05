@@ -27,7 +27,8 @@ public:
   void set_location(Location *L);
 
   void print_stats(WINDOW * win);
-  void add_exp(WINDOW * win, int e);
+  void add_exp(WINDOW * win, int e, int &y);
+  void level_up(WINDOW * win, int &y);
   //Item Functionss
   void add_item(WINDOW * win, Item d);
   void use_item(WINDOW * win, Item *a);

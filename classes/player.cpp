@@ -67,18 +67,34 @@ void Player::print_stats(WINDOW * win){
   waddstr(win, "|__________________");
 }
 
-void Player::add_exp(WINDOW * win, int e){
+void Player::add_exp(WINDOW * win, int e, int &y){
     experience += e;
     std::string s = "You gained " + std::to_string(e) + " experience!\n";
     waddstr(win, s.c_str());
+    y += 2;
     if(experience >= next_level){
-      experience -= next_level;
-      next_level = 100 * ++level;
-      std::string s = "You leveled up! Now at level " + std::to_string(level);
-      waddstr(win, s.c_str());
+      level_up(win,y);
     }
     s = std::to_string(next_level - experience) + " experience until the next level.\n";
     waddstr(win, s.c_str());
+    ++y;
+}
+
+void Player::level_up(WINDOW * win, int &y){
+  experience -= next_level;
+  next_level = 100 * ++level;
+  std::string s = "You leveled up! Now at level " + std::to_string(level) + "\n";
+  waddstr(win, s.c_str());
+  ++y;
+  waddstr(win, "Select a skill to upgrade:\n");
+  ++y;
+  std::vector<std::string> choices;
+  choices.push_back("STR");choices.push_back("END");choices.push_back("SPD");choices.push_back("LCK");
+  std::string choice = select(win, choices, y, false);
+  s = choice + " increased by 1\n";
+  waddstr(win, s.c_str());
+  ++y;
+  skills[choice]++;
 }
 
 //Print out inventory
@@ -272,7 +288,7 @@ void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
   if(!is_alive())
     return;
 
-  add_exp(win, E.drop_exp());
+  add_exp(win, E.drop_exp(), y);
 
   if(E.drop_loot())
     add_item(win, E.get_loot());

@@ -423,7 +423,7 @@ void Game::start(){
     if(reload){
       initialize();
       play_game = true;
-    }      
+    }
   }
   endwin();
 }
