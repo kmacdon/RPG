@@ -1,5 +1,4 @@
 #include "location.hpp"
-#include "../helper/functions.hpp"
 #include <cstdlib>
 #include <iostream>
 #include "enemy.hpp"
@@ -27,7 +26,7 @@ Location::Location(std::string n, float er, std::vector<std::string> e){
 
 void Location::add_connections(std::vector<Location *> c){
   connections.resize(c.size());
-  assign(connections, c);
+  connections = c;
 }
 //need to add srand(time(0)) when program starts
 

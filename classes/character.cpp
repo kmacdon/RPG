@@ -1,5 +1,4 @@
 #include "character.hpp"
-#include "../helper/functions.hpp"
 #include <cmath>
 
 
