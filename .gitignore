@@ -1,5 +1,5 @@
 
-logs*
+logs/*
 error.txt
 flowcharts/*
 images/*
@@ -7,3 +7,4 @@ images/*
 project
 Issues
 .Rhistory
+test*
