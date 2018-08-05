@@ -258,7 +258,23 @@ void Game::main_screen(){
     wrefresh(main);
     //wclear(main);
   }
-  if(play_game && reload){
+  if(!P.is_alive()){
+    wclear(main);
+    y = 0;
+    waddstr(main, "You have died! Would you like to reload your last save?");
+    wrefresh(main);
+    std::vector <std::string> choices;
+    choices.push_back("Yes"); choices.push_back("No");
+    std::string choice = select(main, choices, ++y, false);
+    if(choice == "Yes"){
+      reload = true;
+    }
+    else{
+      reload = false;
+      play_game = false;
+    }
+  }
+  if(reload){
     waddstr(main, "Reloading last save");
     wrefresh(main);
   }

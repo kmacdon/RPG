@@ -70,6 +70,8 @@ void Player::add_exp(WINDOW * win, int e, int &y){
     s = std::to_string(next_level - experience) + " experience until the next level.\n";
     waddstr(win, s.c_str());
     ++y;
+    max_health = 10 + 5*(level - 1);
+    health = max_health;
 }
 
 void Player::level_up(WINDOW * win, int &y){
@@ -250,32 +252,37 @@ void Player::battle(Enemy E, WINDOW * win, WINDOW * stats){
   std::vector<std::string> v;
   v.push_back("Attack");
   v.push_back("Use Item");
+  print_log(MAIN_LOG, "Entering battle loop");
   while(is_alive() && E.is_alive()){
     std::string choice = select(win, v, y, false);
     //selection made
-      y++;
-      if(choice == "Attack"){
-        y += 3;
-        print_log(BATTLE_LOG, "Selected Attack");
-        if(get_speed() >= E.get_speed()){
-          defend(win, E.attack(win));
-          E.defend(win, attack(win));
-        }
-        else {
-          E.defend(win, attack(win));
-          defend(win, E.attack(win));
-        }
+    y++;
+    if(choice == "Attack"){
+      y += 5;
+      std::string m = std::to_string(y);
+      print_log(BATTLE_LOG, m.c_str());
+      print_log(BATTLE_LOG, "Selected Attack");
+      if(get_speed() >= E.get_speed()){
+        defend(win, E.attack(win));
+        E.defend(win, attack(win));
       }
-      else if(choice == "Use Item"){
-        wclear(win);
-        wrefresh(win);
-        print_inventory(win, stats);
-        wclear(win);
-        wrefresh(win);
+      else {
+        E.defend(win, attack(win));
         defend(win, E.attack(win));
       }
+    }
+    else if(choice == "Use Item"){
+      wclear(win);
+      wrefresh(win);
+      print_inventory(win, stats);
+      wclear(win);
+      wrefresh(win);
+      defend(win, E.attack(win));
+      y += 2;
+    }
   }
-
+  char pause = wgetch(win);
+  print_log(MAIN_LOG, "Exiting battle loop");
   //Player is dead
   if(!is_alive())
     return;
@@ -285,7 +292,7 @@ void Player::battle(Enemy E, WINDOW * win, WINDOW * stats){
   if(E.drop_loot())
     add_item(win, E.get_loot());
   wrefresh(win);
-  char pause = wgetch(win);
+  pause = wgetch(win);
   print_log(MAIN_LOG, "Exiting battle()");
   wclear(win);
   wrefresh(win);
