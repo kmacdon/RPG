@@ -1,9 +1,9 @@
-#include "classes/location.hpp"
+#include "../classes/location.hpp"
 #include <string>
 #include <vector>
 #include <iostream>
 #include <sstream>
-#include "classes/player.hpp"
+#include "../classes/player.hpp"
 #include <ncurses.h>
 
 #pragma once

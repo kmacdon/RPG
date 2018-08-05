@@ -1,12 +1,12 @@
 #include "game.hpp"
 #include <fstream>
 #include <algorithm>
-#include "../functions.hpp"
+#include "../helper/functions.hpp"
 #include <ncurses.h>
-#include "../error.hpp"
+#include "../helper/error.hpp"
 #include "dungeon.hpp"
 #include "../data/constants.hpp"
-#include "../screen.hpp"
+#include "../helper/screen.hpp"
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////

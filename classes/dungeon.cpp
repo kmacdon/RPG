@@ -1,7 +1,7 @@
 #include "dungeon.hpp"
 #include "player.hpp"
 #include "../data/constants.hpp"
-#include "../error.hpp"
+#include "../helper/error.hpp"
 
 void Dungeon::explore(WINDOW * win, WINDOW * stats, Player &P, Enemy E){
   print_log(MAIN_LOG, "Entering explore() ");

@@ -1,9 +1,9 @@
 #include "player.hpp"
-#include "../functions.hpp"
-#include "../error.hpp"
+#include "../helper/functions.hpp"
+#include "../helper/error.hpp"
 #include <fstream>
 #include "../data/constants.hpp"
-#include "../screen.hpp"
+#include "../helper/screen.hpp"
 //////////////////////////////////////////////////////////////
 //////////////////////  Constructors  ////////////////////////
 //////////////////////////////////////////////////////////////

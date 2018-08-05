@@ -1,5 +1,5 @@
 #include "location.hpp"
-#include "../functions.hpp"
+#include "../helper/functions.hpp"
 #include <cstdlib>
 #include <iostream>
 #include "enemy.hpp"

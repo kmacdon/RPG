@@ -1,6 +1,6 @@
 #include "screen.hpp"
 #include "error.hpp"
-#include "data/constants.hpp"
+#include "../data/constants.hpp"
 #include <ctype.h>
 //Used to select input with arrow keys
 std::string select(WINDOW * win, std::vector<std::string> choices, int &y, bool vertical){
