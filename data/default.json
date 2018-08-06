@@ -33,10 +33,6 @@
     {"name":"Small Potion",
       "object":"Item",
       "stat":1,"type":2
-    },
-    {"name":"Silver Sword",
-      "object":"Item",
-      "stat":1,"type":0
     }
   ],
   "level":1,
@@ -51,6 +47,6 @@
     "stat":5,
     "type":0
   },
-  "skills":[4,4,4,1],
+  "skills":{"END":4,"LCK":1,"SPD":3,"STR":4},
   "alive":true}
 {"object":"END"}

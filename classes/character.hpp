@@ -1,6 +1,7 @@
 #include "item.hpp"
 #include <ncurses.h>
 #include <vector>
+#include <unordered_map>
 #pragma once
 
 class Character{
@@ -8,7 +9,7 @@ protected:
   //Members
   int health;
   int max_health;
-  std::vector <int> skills; // Strength, Endurance, Speed, Luck
+  std::unordered_map<std::string, int> skills;
   int experience;
   Item weapon;
   Item armor;
@@ -18,14 +19,14 @@ protected:
 public:
   //Constructors
   Character();
-  Character(std::string n, int h, int mh, std::vector <int> s, int e, Item w, Item a);
+  Character(std::string n, int h, int mh, std::unordered_map<std::string, int> s, int e, Item w, Item a);
   ~Character();
 
   //Methods
   std::string get_name() {return name;};
   int attack(WINDOW * win);
   void defend(WINDOW * win, int a);
-  int get_speed() {return skills[2];};
+  int get_speed() {return skills["SPD"];};
   bool is_alive() {return alive;};
 
 };

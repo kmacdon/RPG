@@ -12,7 +12,7 @@ Player::Player(){
   name = "NULL";
 }
 
-Player::Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a, int next_level){
+Player::Player(std::string n, int h, int mh, std::unordered_map<std::string, int> s, Item w, Item a, int next_level){
   name = n;
   health = h;
   max_health = mh;
@@ -29,17 +29,9 @@ Player::Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a
 //////////////////////  Methods  /////////////////////////////
 //////////////////////////////////////////////////////////////
 
-void Player::move(){
-  current->print_connections();
-  std::string s;
-  std::getline(std::cin, s);
-  std::vector<std::string> c = current->list_connections();
-  for(int i = 0; i < c.size(); i++){
-    if(c[i] == s){
-      current = current->get_connection(s);
-      return;
-    }
-  }
+void Player::move(WINDOW * win, WINDOW * stats, std::string s){
+  current->change_location(win, stats, this, s);
+
 }
 
 Location* Player::get_location(){
@@ -60,25 +52,43 @@ void Player::print_stats(WINDOW * win){
   waddstr(win, s.c_str());
   s = "| Experience: " + std::to_string(experience) + "\n| Next Level:" + std::to_string(next_level) + "\n";
   waddstr(win, s.c_str());
-  s = "| Str: " + std::to_string(skills[0]) + "  End: " + std::to_string(skills[1]) + "\n| Spd: " + std::to_string(skills[2]);
+  s = "| Str: " + std::to_string(skills["STR"]) + "  End: " + std::to_string(skills["END"]) + "\n| Spd: " + std::to_string(skills["SPD"]);
   waddstr(win, s.c_str());
-  s = "  Lck: " + std::to_string(skills[3]) + "\n";
+  s = "  Lck: " + std::to_string(skills["LCK"]) + "\n";
   waddstr(win, s.c_str());
   waddstr(win, "|__________________");
 }
 
-void Player::add_exp(WINDOW * win, int e){
+void Player::add_exp(WINDOW * win, int e, int &y){
     experience += e;
     std::string s = "You gained " + std::to_string(e) + " experience!\n";
     waddstr(win, s.c_str());
+    y += 2;
     if(experience >= next_level){
-      experience -= next_level;
-      next_level = 100 * ++level;
-      std::string s = "You leveled up! Now at level " + std::to_string(level);
-      waddstr(win, s.c_str());
+      level_up(win,y);
     }
     s = std::to_string(next_level - experience) + " experience until the next level.\n";
     waddstr(win, s.c_str());
+    ++y;
+    max_health = 10 + 5*(level - 1);
+    health = max_health;
+}
+
+void Player::level_up(WINDOW * win, int &y){
+  experience -= next_level;
+  next_level = 100 * ++level;
+  std::string s = "You leveled up! Now at level " + std::to_string(level) + "\n";
+  waddstr(win, s.c_str());
+  ++y;
+  waddstr(win, "Select a skill to upgrade:\n");
+  ++y;
+  std::vector<std::string> choices;
+  choices.push_back("STR");choices.push_back("END");choices.push_back("SPD");choices.push_back("LCK");
+  std::string choice = select(win, choices, y, false);
+  s = choice + " increased by 1\n";
+  waddstr(win, s.c_str());
+  ++y;
+  skills[choice]++;
 }
 
 //Print out inventory
@@ -229,7 +239,7 @@ void Player::remove_item(std::string s){
   print_log(MAIN_LOG, "Exiting remove_item()");
 }
 
-void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
+void Player::battle(Enemy E, WINDOW * win, WINDOW * stats){
   print_log(MAIN_LOG, "Entering battle()");
   wclear(win);
   std::string s;
@@ -242,42 +252,47 @@ void Player::battle(Enemy &E, WINDOW * win, WINDOW * stats){
   std::vector<std::string> v;
   v.push_back("Attack");
   v.push_back("Use Item");
+  print_log(MAIN_LOG, "Entering battle loop");
   while(is_alive() && E.is_alive()){
     std::string choice = select(win, v, y, false);
     //selection made
-      y++;
-      if(choice == "Attack"){
-        y += 3;
-        print_log(BATTLE_LOG, "Selected Attack");
-        if(get_speed() >= E.get_speed()){
-          defend(win, E.attack(win));
-          E.defend(win, attack(win));
-        }
-        else {
-          E.defend(win, attack(win));
-          defend(win, E.attack(win));
-        }
+    y++;
+    if(choice == "Attack"){
+      y += 5;
+      std::string m = std::to_string(y);
+      print_log(BATTLE_LOG, m.c_str());
+      print_log(BATTLE_LOG, "Selected Attack");
+      if(get_speed() >= E.get_speed()){
+        defend(win, E.attack(win));
+        E.defend(win, attack(win));
       }
-      else if(choice == "Use Item"){
-        wclear(win);
-        wrefresh(win);
-        print_inventory(win, stats);
-        wclear(win);
-        wrefresh(win);
+      else {
+        E.defend(win, attack(win));
         defend(win, E.attack(win));
       }
+    }
+    else if(choice == "Use Item"){
+      wclear(win);
+      wrefresh(win);
+      print_inventory(win, stats);
+      wclear(win);
+      wrefresh(win);
+      defend(win, E.attack(win));
+      y += 2;
+    }
   }
-
+  char pause = wgetch(win);
+  print_log(MAIN_LOG, "Exiting battle loop");
   //Player is dead
   if(!is_alive())
     return;
 
-  add_exp(win, E.drop_exp());
+  add_exp(win, E.drop_exp(), y);
 
   if(E.drop_loot())
     add_item(win, E.get_loot());
   wrefresh(win);
-  char pause = wgetch(win);
+  pause = wgetch(win);
   print_log(MAIN_LOG, "Exiting battle()");
   wclear(win);
   wrefresh(win);

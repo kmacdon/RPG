@@ -18,22 +18,23 @@ class Player: public Character{
 public:
   //Constructors
   Player();
-  Player(std::string n, int h, int mh, std::vector <int> s, Item w, Item a, int next_level);
+  Player(std::string n, int h, int mh, std::unordered_map<std::string, int> s, Item w, Item a, int next_level);
   ~Player() {};
 
   //Methods
-  void move();
+  void move(WINDOW * win, WINDOW * stats, std::string s);
   Location* get_location();
   void set_location(Location *L);
 
   void print_stats(WINDOW * win);
-  void add_exp(WINDOW * win, int e);
+  void add_exp(WINDOW * win, int e, int &y);
+  void level_up(WINDOW * win, int &y);
   //Item Functionss
   void add_item(WINDOW * win, Item d);
   void use_item(WINDOW * win, Item *a);
   Item* get_item(WINDOW * win, std::string);
   void remove_item(std::string s);
-  void battle(Enemy &E, WINDOW * win, WINDOW * stats);
+  void battle(Enemy E, WINDOW * win, WINDOW * stats);
   void print_inventory(WINDOW * win, WINDOW * stats);
 
   //Setters

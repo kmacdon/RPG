@@ -19,28 +19,6 @@ Game::Game() :play_game(true), reload(false){
 //////////////////////  Methods  /////////////////////////////
 //////////////////////////////////////////////////////////////
 
-//load enemy from file
-Enemy Game::load_enemy(std::string e){
-  print_log(MAIN_LOG, "Loading enemy " + e);
-  std::ifstream input(ENEMY_FILE);
-  nlohmann::json j;
-  while(input >> j){
-    if(j["object"] == "END"){
-      break;
-    }
-    print_log(MAIN_LOG, j["name"]);
-    if(j["name"] == e){
-      print_log(MAIN_LOG, "Loaded enemy " + e);
-      Enemy E = j;
-      return E;
-    }
-  }
-  std::string s = j["name"];
-  print_log(MAIN_LOG, "Error: Failed to load enemy " + s);
-  Enemy E;
-  return E;
-}
-
 //create game instance
 void Game::initialize(){
   print_log(MAIN_LOG, "Entering initialize()", false);
@@ -114,6 +92,7 @@ void Game::welcome_screen(WINDOW * win){
       break;
     }
   }
+  initialize();
   //Player info
   //get input
   s.clear();
@@ -197,34 +176,14 @@ void Game::main_screen(){
       for(int i = 2; i < v.size(); i++){
         v[1] += " " + v[i];
       }
-      std::vector<std::string> c = P.current->list_connections();
-      for(int i = 0; i < c.size(); i++){
-        if(c[i] == v[1]){
-          print_log(MAIN_LOG, "Moving from " + P.current->get_name() + " to " + c[i]);
-          P.current = P.current->get_connection(c[i]);
-          change = true;
-          wrefresh(main);
-          //refresh dungeon
-          poi_screen(poi);
-          wrefresh(poi);
-          break;
-        }
-        if(i == c.size() - 1  && !change){
-          waddstr(main, "Sorry, that is not a valid location\n");
-          wrefresh(main);
-          break;
-        }
-      }
-      if(change){
-        if(P.current->random_encounter()){
-          Enemy E = load_enemy(P.current->generate_enemy());
-          wclear(main);
-          P.battle(E, main, info);
-        }
-        wclear(map);
-        map_screen(map);
-        wrefresh(map);
-      }
+      P.move(main, info, v[1]);
+      //refresh dungeon
+      poi_screen(poi);
+      wrefresh(poi);
+      //refresh map
+      wclear(map);
+      map_screen(map);
+      wrefresh(map);
     }
     //explore
     else if(v[0] == "explore"){
@@ -238,8 +197,7 @@ void Game::main_screen(){
           print_log(MAIN_LOG, "Entering dungeon " + D.get_name());
           wclear(main);
           wrefresh(main);
-          Enemy E = load_enemy(D.get_enemy());
-          D.explore(main, info, P, E);
+          D.explore(main, info, P);
           print_log(MAIN_LOG, "Deleting dungeon " + D.get_name());
           P.current->poi.erase(P.current->poi.begin() + i);
           nocbreak();
@@ -300,7 +258,23 @@ void Game::main_screen(){
     wrefresh(main);
     //wclear(main);
   }
-  if(play_game && reload){
+  if(!P.is_alive()){
+    wclear(main);
+    y = 0;
+    waddstr(main, "You have died! Would you like to reload your last save?");
+    wrefresh(main);
+    std::vector <std::string> choices;
+    choices.push_back("Yes"); choices.push_back("No");
+    std::string choice = select(main, choices, ++y, false);
+    if(choice == "Yes"){
+      reload = true;
+    }
+    else{
+      reload = false;
+      play_game = false;
+    }
+  }
+  if(reload){
     waddstr(main, "Reloading last save");
     wrefresh(main);
   }
@@ -418,10 +392,11 @@ void Game::start(){
   //include option to reload
   welcome_screen(stdscr);
   while(play_game){
-    initialize();
     play();
-    if(reload)
+    if(reload){
+      initialize();
       play_game = true;
+    }
   }
   endwin();
 }

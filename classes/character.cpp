@@ -10,13 +10,16 @@ Character::Character(){
   name = "NULL";
   health = 1;
   max_health = 1;
-  skills.push_back(1); skills.push_back(1); skills.push_back(1); skills.push_back(1);
+  skills["STR"] = 1;
+  skills["END"] = 1;
+  skills["SPD"] = 1;
+  skills["LCK"] = 1;
   weapon = Item("rusty axe", Weapon, 2);
   armor = Item("rusty mail", Armor, 2);
   alive = true;
 }
 
-Character::Character(std::string n, int h, int mh, std::vector <int> s, int e, Item w, Item a){
+Character::Character(std::string n, int h, int mh, std::unordered_map<std::string, int> s, int e, Item w, Item a){
     name = n;
     health = h;
     max_health = mh;
@@ -39,13 +42,13 @@ int Character::attack(WINDOW * win){
   waddstr(win, s.c_str());
   int a = 0;
   //Luck factor
-  if((float)rand()/(float)RAND_MAX < .05*skills[3])
-    a = sqrt(skills[3]);
-  return round((.8*skills[0] + weapon.get_stat() + a));
+  if((float)rand()/(float)RAND_MAX < .05*skills["LCK"])
+    a = sqrt(skills["LCK"]);
+  return round((.8*skills["STR"] + weapon.get_stat() + a));
 }
 
 void Character::defend(WINDOW * win, int a){
-  int d = round(.7*skills[1] + armor.get_stat());
+  int d = round(.7*skills["END"] + armor.get_stat());
   d = (d > a) ? 1 : a - d;
   health -= d;
   std::string s = std::to_string(d) + " points\nof damage!\n";
