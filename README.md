@@ -3,7 +3,7 @@ Implementing an RPG in C++ using a Text-Based User Interface
 
 ### Introduction
 
-I began this project over the summer having been inspired by another C++ RPG game I made for a class project in the Fall. That game, which I worked on with a partner, involved moving an '0' character around a 20 x 10 map using the WASD keys to collect $ symbols. The goal was to collect 10 $ and enemies would be randomly generated from among a few types to challange the player with math questions. If the player answered incorrectly, they lost a health point of which they only had 3.
+I began this project over the summer having been inspired by another C++ RPG game I made for a class project in the Fall. That game, which I worked on with a partner, involved moving an '0' character around a 20 x 10 map using the WASD keys to collect $ symbols. The goal was to collect 10 $ and enemies would be randomly generated from among a few types to challenge the player with math questions. If the player answered incorrectly, they lost a health point of which they only had 3.
 
 This was a very simple project requiring only a couple hundred lines of code, but it was my first exposure to changing input and output to the terminal by getting commands directly after key presses or creating constantly updating output. For this program, I decided to go deeper and create a more complicated game screen using the ncurses library to display different information screens on the terminal and allow the player to use arrow keys to make selections. I also utilized classes and inheritance more, helping to break the game up into manageable and logical pieces.
 
